@@ -40,7 +40,7 @@
 #set ($columnsProperties = {
   'doc.title': {"displayName":"Title","link":"view"},
   'event': {},
-  'status': {},
+  'status': {"html": true},
   'presenters': {"html":true},
   'reviewers': {"html":true},
   '_actions': {"sortable":false,"filterable":false,"html":true,"actions":["edit","delete"]}

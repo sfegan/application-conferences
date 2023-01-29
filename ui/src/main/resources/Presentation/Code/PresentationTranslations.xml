@@ -56,6 +56,9 @@ presentation.sheet.description=This page controls how Presentation pages are dis
 presentation.sheet.noObject=The current page doesn't have the expected Presentation object.
 presentation.sheet.noFields=The Presentation application doesn't have any fields to display.
 
+presentation.sheet.slides.pdfViewerMissing=To preview the PDF, install the PDF Viewer macro.
+presentation.sheet.status.notifyReviewers=Notify reviewers
+
 # Live table generic keys
 presentation.livetable.doc.title=Page Title
 presentation.livetable.doc.name=Page Name

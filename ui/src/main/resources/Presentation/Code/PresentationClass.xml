@@ -170,7 +170,7 @@
     </slides>
     <status>
       <cache>0</cache>
-      <customDisplay/>
+      <customDisplay>{{include reference="Presentation.Code.StatusDisplayer"/}}</customDisplay>
       <defaultValue/>
       <disabled>0</disabled>
       <displayType>select</displayType>
