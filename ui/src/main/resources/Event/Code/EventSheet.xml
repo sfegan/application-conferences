@@ -1,0 +1,368 @@
+<?xml version="1.1" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc version="1.4" reference="Event.Code.EventSheet" locale="">
+  <web>Event.Code</web>
+  <name>EventSheet</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <creator>xwiki:XWiki.Admin</creator>
+  <parent>EventClass</parent>
+  <author>xwiki:XWiki.Admin</author>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <version>1.1</version>
+  <title/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>true</hidden>
+  <content>{{velocity}}
+#set ($object = $doc.getObject('Event.Code.EventClass'))
+#if (!$object)
+  #set ($messageKey = 'event.sheet.description')
+  #set ($messageType = 'info')
+  #if ($doc.documentReference.name != 'EventSheet')
+    #set ($messageKey = 'event.sheet.noObject')
+    #set ($messageType = 'warning')
+  #end
+  {{$messageType}}
+  $services.localization.render($messageKey)
+  {{/$messageType}}
+  #stop
+#end
+#set ($discard = $xwiki.jsfx.use('uicomponents/edit/editableProperty.js', {
+  'forceSkinAction': true,
+  'language': $xcontext.locale
+}))
+#set ($discard = $doc.use($object))
+#set ($discard = $xwiki.ssx.use('Event.Code.EventSheet'))
+#set ($editing = $xcontext.action == 'edit')
+{{html wiki="true" clean="false"}}
+&lt;div class="xform"&gt;
+  #if($editing)
+  &lt;div class="row"&gt;
+    &lt;div class="col-md-12"&gt;
+      &lt;dl&gt;
+        &lt;dt #if (!$editing &amp;&amp; $hasEdit)
+            class="editableProperty"
+            data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('title')))"
+            data-property-type="object"#end&gt;
+          &lt;label#if ($editing) for="Event.Code.EventClass_0_title"#end&gt;
+            $services.icon.render('font') $escapetool.xml($doc.displayPrettyName('title', false, false))
+          &lt;/label&gt;
+        &lt;/dt&gt;
+        &lt;dd&gt;$doc.display('title')&lt;/dd&gt;
+      &lt;/dl&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  #end
+  &lt;div class="row"&gt;
+    &lt;div class="col-md-8 col-sm-12"&gt;
+      &lt;div class="row"&gt;
+        &lt;div class="col-sm-6"&gt;
+          &lt;dl&gt;
+            &lt;dt #if (!$editing &amp;&amp; $hasEdit)
+                class="editableProperty"
+                data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('startDate')))"
+                data-property-type="object"#end&gt;
+              &lt;label#if ($editing) for="Event.Code.EventClass_0_startDate"#end&gt;
+                $services.icon.render('calendar') $escapetool.xml($doc.displayPrettyName('startDate', false, false))
+              &lt;/label&gt;
+            &lt;/dt&gt;
+            &lt;dd&gt;$doc.display('startDate')&lt;/dd&gt;
+          &lt;/dl&gt;
+        &lt;/div&gt;
+        &lt;div class="col-sm-6"&gt;
+          &lt;dl&gt;
+            &lt;dt #if (!$editing &amp;&amp; $hasEdit)
+                class="editableProperty"
+                data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('endDate')))"
+                data-property-type="object"#end&gt;
+              &lt;label#if ($editing) for="Event.Code.EventClass_0_endDate"#end&gt;
+                $services.icon.render('calendar') $escapetool.xml($doc.displayPrettyName('endDate', false, false))
+              &lt;/label&gt;
+            &lt;/dt&gt;
+            &lt;dd&gt;$doc.display('endDate')&lt;/dd&gt;
+          &lt;/dl&gt;
+        &lt;/div&gt;
+        &lt;div class="col-sm-6"&gt;
+          &lt;dl&gt;
+            &lt;dt #if (!$editing &amp;&amp; $hasEdit)
+                class="editableProperty"
+                data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('responsible')))"
+                data-property-type="object"#end&gt;
+              &lt;label#if ($editing) for="Event.Code.EventClass_0_responsible"#end&gt;
+                $services.icon.render('user') $escapetool.xml($doc.displayPrettyName('responsible', false, false))
+              &lt;/label&gt;
+            &lt;/dt&gt;
+            &lt;dd&gt;$doc.display('responsible')&lt;/dd&gt;
+          &lt;/dl&gt;
+        &lt;/div&gt;
+        &lt;div class="col-sm-6"&gt;
+          &lt;dl&gt;
+            &lt;dt #if (!$editing &amp;&amp; $hasEdit)
+                class="editableProperty"
+                data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('participants')))"
+                data-property-type="object"#end&gt;
+              &lt;label#if ($editing) for="Event.Code.EventClass_0_participants"#end&gt;
+                $services.icon.render('group') $escapetool.xml($doc.displayPrettyName('participants', false, false))
+              &lt;/label&gt;
+            &lt;/dt&gt;
+            &lt;dd&gt;$doc.display('participants')&lt;/dd&gt;
+          &lt;/dl&gt;
+        &lt;/div&gt;
+        &lt;div class="col-xs-12"&gt;
+          &lt;dl&gt;
+            &lt;dt #if (!$editing &amp;&amp; $hasEdit)
+                class="editableProperty"
+                data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('description')))"
+                data-property-type="object"#end&gt;
+              &lt;label#if ($editing) for="Event.Code.EventClass_0_description"#end&gt;
+                $services.icon.render('list') $escapetool.xml($doc.displayPrettyName('description', false, false))
+              &lt;/label&gt;
+            &lt;/dt&gt;
+            &lt;dd&gt;$doc.display('description')&lt;/dd&gt;
+          &lt;/dl&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="col-md-4 col-sm-12"&gt;
+      &lt;dl&gt;
+        &lt;dt #if (!$editing &amp;&amp; $hasEdit)
+            class="editableProperty"
+            data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('location')))"
+            data-property-type="object"#end&gt;
+          &lt;label#if ($editing) for="Event.Code.EventClass_0_location"#end&gt;
+            $services.icon.render('world') $escapetool.xml($doc.displayPrettyName('location', false, false))
+          &lt;/label&gt;
+        &lt;/dt&gt;
+        &lt;dd&gt;
+          $doc.display('location')
+          #if($doc.getValue('location') != '' &amp;&amp; !$editing &amp;&amp; $services.rendering.getMacroDescriptor($services.rendering.resolveMacroId('map')))
+          {{/html}}
+
+          {{map location="$doc.getValue('location')" width="100%"/}}
+
+          {{html clean="false" wiki="true"}}
+          #end
+        &lt;/dd&gt;
+      &lt;/dl&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+#if(!$editing)
+  &lt;div class="row"&gt;
+    &lt;div class="col-xs-12"&gt;
+      &lt;h2&gt;Presentations&lt;/h2&gt;
+          #if ($hasEdit)
+          &lt;form action="$doc.getURL('create')" class="xform" method="post" name="createPresentation"&gt;
+            #set($discard = $xwiki.jsfx.use('js/xwiki/create.js', {'forceSkinAction': true}))
+            ## Keep some backward compatibility and pass the parent of the page
+            ## We will also use the parent field to transfer the name of teh event on which this new presentation should be linked to
+            #set($escapedEventReference = $escapetool.xml($services.model.serialize($doc.documentReference, 'local')))
+            &lt;input type="hidden" name="parent" value="$escapedEventReference" /&gt;
+            ## The template provider is needed for the create action
+            &lt;input type="hidden" name="templateprovider" value="" /&gt;
+            &lt;input type="hidden" name="template" value="Presentation.Code.PresentationTemplate" /&gt;
+            &lt;div&gt;
+              #template('locationPicker_macros.vm')
+              #locationPicker({
+               'id': 'target',
+               'title': {
+                  'label': 'event.sheet.createPresentation.title',
+                  'hint': 'event.sheet.createPresentation.title.hint',
+                  'name': 'title',
+                  'placeholder': 'event.sheet.createPresentation.title.placeholder'
+                },
+                'preview': {
+                  'label': 'core.create.locationPreview.label',
+                  'hint': 'core.create.locationPreview.hint'
+                },
+                'parent': {
+                  'label': 'core.create.spaceReference.label',
+                  'hint': 'core.create.spaceReference.hint',
+                  'name': 'spaceReference',
+                  'reference': $doc.documentReference.parent,
+                  'placeholder': 'core.create.spaceReference.placeholder'
+                },
+                'name': {
+                  'label': 'core.create.name.label',
+                  'hint': 'core.create.name.hint',
+                  'name': 'name',
+                  'placeholder': 'core.create.name.placeholder'
+                }
+              })
+              &lt;span class="buttonwrapper"&gt;
+                &lt;input class="button" type="submit" value="$escapetool.xml($services.localization.render('event.sheet.createPresentation.create'))"/&gt;
+              &lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/form&gt;
+          #end
+          #set ($columnsProperties = {
+            'doc.title': {"displayName":"Title","link":"view"},
+            'presenters': {"html":true},
+            'reviewers': {"html":true},
+            'status': {'type': 'list'},
+            'event': {'type': 'hidden'},
+            '_actions': {"sortable":false,"filterable":false,"html":true,"actions":["edit","delete"]}
+          })
+          #set ($options = {
+            'className': 'Presentation.Code.PresentationClass',
+            'translationPrefix': 'presentation.livetable.',
+            'tagCloud': true,
+            'rowCount': 15,
+            'maxPages': 10,
+            'selectedColumn': 'doc.title',
+            'defaultOrder': 'asc',
+            'extraParams': "event=${escapetool.url($doc.fullName)}"
+          })
+          #set ($columns = ['doc.title', 'presenters', 'reviewers', 'status', '_actions', 'event'])
+          #livetable('presentations' $columns $columnsProperties $options)
+    &lt;/div&gt;
+  &lt;/div&gt;
+#end
+{{/html}}
+{{/velocity}}</content>
+  <object>
+    <name>Event.Code.EventSheet</name>
+    <number>0</number>
+    <className>XWiki.StyleSheetExtension</className>
+    <guid>ebaa44ef-0fd6-433a-89e9-af236df89c49</guid>
+    <class>
+      <name>XWiki.StyleSheetExtension</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <cache>
+        <cache>0</cache>
+        <defaultValue>long</defaultValue>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>cache</name>
+        <number>5</number>
+        <prettyName>Caching policy</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>long|short|default|forbid</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </cache>
+      <code>
+        <contenttype>PureText</contenttype>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <rows>20</rows>
+        <size>50</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <contentType>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>contentType</name>
+        <number>6</number>
+        <prettyName>Content Type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>CSS|LESS</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </contentType>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <parse>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>parse</name>
+        <number>4</number>
+        <prettyName>Parse content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </parse>
+      <use>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>use</name>
+        <number>3</number>
+        <prettyName>Use this extension</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>currentPage|onDemand|always</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </use>
+    </class>
+    <property>
+      <cache>long</cache>
+    </property>
+    <property>
+      <code>.xwiki-livetable#presentations select.pagesizeselect {
+  width: auto;
+}</code>
+    </property>
+    <property>
+      <contentType/>
+    </property>
+    <property>
+      <name/>
+    </property>
+    <property>
+      <parse/>
+    </property>
+    <property>
+      <use/>
+    </property>
+  </object>
+</xwikidoc>

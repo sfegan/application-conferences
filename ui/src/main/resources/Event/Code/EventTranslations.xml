@@ -1,0 +1,128 @@
+<?xml version="1.1" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc version="1.4" reference="Event.Code.EventTranslations" locale="">
+  <web>Event.Code</web>
+  <name>EventTranslations</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <creator>xwiki:XWiki.Admin</creator>
+  <parent>EventClass</parent>
+  <author>xwiki:XWiki.Admin</author>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <version>1.1</version>
+  <title/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>plain/1.0</syntaxId>
+  <hidden>true</hidden>
+  <content># Class fields
+Event.Code.EventClass_title=Title
+Event.Code.EventClass_location=Location
+Event.Code.EventClass_startDate=Start date
+Event.Code.EventClass_endDate=End date
+Event.Code.EventClass_description=Description
+Event.Code.EventClass_responsible=Responsible
+Event.Code.EventClass_participants=Participants
+
+# Sheet keys
+event.sheet.description=This page controls how Event pages are displayed in both view and edit modes.
+event.sheet.noObject=The current page doesn't have the expected Event object.
+event.sheet.noFields=The Event application doesn't have any fields to display.
+event.sheet.presentations=Presentations
+event.sheet.createPresentation.title=Presentation title
+event.sheet.createPresentation.title.hint=Title of the new presentation
+event.sheet.createPresentation.title.placeholder=My presentation
+event.sheet.createPresentation.create=Create
+
+# Live table generic keys
+event.livetable.doc.title=Page Title
+event.livetable.doc.name=Page Name
+event.livetable.doc.space=Space
+event.livetable.doc.fullname=Page full name
+event.livetable.doc.location=Location
+event.livetable.doc.author=Last Author
+event.livetable.doc.creator=Creator
+event.livetable.doc.date=Date
+event.livetable.doc.creationDate=Creation Date
+event.livetable._avatar=Avatar
+event.livetable._images=Images
+event.livetable._attachments=Attachments
+event.livetable._actions=Actions
+event.livetable._actions.edit=Edit
+event.livetable._actions.delete=Delete
+event.livetable.emptyvalue=-
+
+# Live table specific keys
+event.livetable.title=Title
+event.livetable.location=Location
+event.livetable.startDate=Start date
+event.livetable.endDate=End date
+event.livetable.description=Description
+event.livetable.responsible=Responsible
+event.livetable.participants=Participants
+
+# Other keys
+event.entry.name=Event
+
+# Deprecated keys
+event.dataSpace.title=Data
+</content>
+  <object>
+    <name>Event.Code.EventTranslations</name>
+    <number>0</number>
+    <className>XWiki.TranslationDocumentClass</className>
+    <guid>50c8ec8f-f339-495d-9406-0fd0ba5be2f7</guid>
+    <class>
+      <name>XWiki.TranslationDocumentClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <scope>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>scope</name>
+        <number>1</number>
+        <prettyName>Scope</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>GLOBAL|WIKI|USER|ON_DEMAND</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </scope>
+    </class>
+    <property>
+      <scope>WIKI</scope>
+    </property>
+  </object>
+</xwikidoc>
