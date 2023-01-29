@@ -1,6 +1,6 @@
-# Migrator Application
+# Events Application
 
-Allow to define migrations at the extension level.
+Allow to create a database of events and presentations
 
 * Project Leads:
   * [Clément Aubin](http://www.xwiki.org/xwiki/bin/view/XWiki/caubin)

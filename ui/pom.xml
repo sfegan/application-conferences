@@ -58,5 +58,11 @@
     </plugins>
   </build>
   <dependencies>
+    <dependency>
+      <groupId>org.xwiki.contrib</groupId>
+      <artifactId>xwiki-macro-map</artifactId>
+      <version>${mapMacro.version}</version>
+      <type>xar</type>
+    </dependency>
   </dependencies>
 </project>
