@@ -222,7 +222,7 @@
             'doc.title': {"displayName":"Title","link":"view"},
             'presenters': {"html":true},
             'reviewers': {"html":true},
-            'status': {'type': 'list'},
+            'status': {'type': 'list', 'html': true},
             'event': {'type': 'hidden'},
             '_actions': {"sortable":false,"filterable":false,"html":true,"actions":["edit","delete"]}
           })
