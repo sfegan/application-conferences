@@ -25,7 +25,7 @@
   <parent>
     <groupId>org.xwiki.contrib.events</groupId>
     <artifactId>application-events</artifactId>
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
   </parent>
   <artifactId>application-events-ui</artifactId>
   <name>Events Application - UI</name>
