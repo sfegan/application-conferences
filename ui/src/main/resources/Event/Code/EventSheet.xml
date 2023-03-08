@@ -79,6 +79,19 @@
   &lt;div class="row"&gt;
     &lt;div class="col-md-8 col-sm-12"&gt;
       &lt;div class="row"&gt;
+        &lt;div class="col-sm-12"&gt;
+          &lt;dl&gt;
+            &lt;dt #if (!$editing &amp;&amp; $hasEdit)
+                class="editableProperty"
+                data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('conferenceURL')))"
+                data-property-type="object"#end&gt;
+              &lt;label#if ($editing) for="Event.Code.EventClass_0_conferenceURL"#end&gt;
+                $services.icon.render('wiki') $escapetool.xml($doc.displayPrettyName('conferenceURL', false, false))
+              &lt;/label&gt;
+            &lt;/dt&gt;
+            &lt;dd&gt;$doc.display('conferenceURL')&lt;/dd&gt;
+          &lt;/dl&gt;
+        &lt;/div&gt;
         &lt;div class="col-sm-6"&gt;
           &lt;dl&gt;
             &lt;dt #if (!$editing &amp;&amp; $hasEdit)
@@ -109,16 +122,55 @@
           &lt;dl&gt;
             &lt;dt #if (!$editing &amp;&amp; $hasEdit)
                 class="editableProperty"
-                data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('responsible')))"
+                data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('abstractDeadline')))"
                 data-property-type="object"#end&gt;
-              &lt;label#if ($editing) for="Event.Code.EventClass_0_responsible"#end&gt;
-                $services.icon.render('user') $escapetool.xml($doc.displayPrettyName('responsible', false, false))
+              &lt;label#if ($editing) for="Event.Code.EventClass_0_abstractDeadline"#end&gt;
+                $services.icon.render('calendar') $escapetool.xml($doc.displayPrettyName('abstractDeadline', false, false))
               &lt;/label&gt;
             &lt;/dt&gt;
-            &lt;dd&gt;$doc.display('responsible')&lt;/dd&gt;
+            &lt;dd&gt;$doc.display('abstractDeadline')&lt;/dd&gt;
           &lt;/dl&gt;
         &lt;/div&gt;
         &lt;div class="col-sm-6"&gt;
+          &lt;dl&gt;
+            &lt;dt #if (!$editing &amp;&amp; $hasEdit)
+                class="editableProperty"
+                data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('proceedingsDeadline')))"
+                data-property-type="object"#end&gt;
+              &lt;label#if ($editing) for="Event.Code.EventClass_0_proceedingsDeadline"#end&gt;
+                $services.icon.render('calendar') $escapetool.xml($doc.displayPrettyName('proceedingsDeadline', false, false))
+              &lt;/label&gt;
+            &lt;/dt&gt;
+            &lt;dd&gt;$doc.display('proceedingsDeadline')&lt;/dd&gt;
+          &lt;/dl&gt;
+        &lt;/div&gt;
+        &lt;div class="col-sm-6"&gt;
+          &lt;dl&gt;
+            &lt;dt #if (!$editing &amp;&amp; $hasEdit)
+                class="editableProperty"
+                data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('hasProceedings')))"
+                data-property-type="object"#end&gt;
+              &lt;label#if ($editing) for="Event.Code.EventClass_0_hasProceedings"#end&gt;
+                $services.icon.render('list') $escapetool.xml($doc.displayPrettyName('hasProceedings', false, false))
+              &lt;/label&gt;
+            &lt;/dt&gt;
+            &lt;dd&gt;$doc.display('hasProceedings')&lt;/dd&gt;
+          &lt;/dl&gt;
+        &lt;/div&gt;
+        &lt;div class="col-sm-6"&gt;
+          &lt;dl&gt;
+            &lt;dt #if (!$editing &amp;&amp; $hasEdit)
+                class="editableProperty"
+                data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('approvalBy')))"
+                data-property-type="object"#end&gt;
+              &lt;label#if ($editing) for="Event.Code.EventClass_0_approvalBy"#end&gt;
+                $services.icon.render('list') $escapetool.xml($doc.displayPrettyName('approvalBy', false, false))
+              &lt;/label&gt;
+            &lt;/dt&gt;
+            &lt;dd&gt;$doc.display('approvalBy')&lt;/dd&gt;
+          &lt;/dl&gt;
+        &lt;/div&gt;
+        &lt;div class="col-sm-12"&gt;
           &lt;dl&gt;
             &lt;dt #if (!$editing &amp;&amp; $hasEdit)
                 class="editableProperty"
