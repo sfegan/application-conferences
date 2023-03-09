@@ -30,7 +30,7 @@
   <parent>EventClass</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <version>1.1</version>
+  <version>2.1</version>
   <title/>
   <comment/>
   <minorEdit>false</minorEdit>
@@ -44,6 +44,13 @@ Event.Code.EventClass_endDate=End date
 Event.Code.EventClass_description=Description
 Event.Code.EventClass_responsible=Responsible
 Event.Code.EventClass_participants=Participants
+Event.Code.EventClass_conferenceURL=Conference URL
+Event.Code.EventClass_abstractDeadline=Abstract deadline
+Event.Code.EventClass_approvalBy=Approval by
+Event.Code.EventClass_approvalBy_sapo=SAPO
+Event.Code.EventClass_approvalBy_swg=SWG
+Event.Code.EventClass_hasProceedings=Has proceedings
+Event.Code.EventClass_proceedingsDeadline=Proceedings deadline
 
 # Sheet keys
 event.sheet.description=This page controls how Event pages are displayed in both view and edit modes.
@@ -53,7 +60,14 @@ event.sheet.presentations=Presentations
 event.sheet.createPresentation.title=Presentation title
 event.sheet.createPresentation.title.hint=Title of the new presentation
 event.sheet.createPresentation.title.placeholder=My presentation
-event.sheet.createPresentation.create=Create
+event.sheet.createPresentation.create=Create presentation
+
+# Event creation keys
+event.createEvent.section_title=Add new conference
+event.createEvent.title=Conference name
+event.createEvent.title.hint=Globally unique conference name, preferably including year or sequential number for recurrent conferences.
+event.createEvent.title.placeholder=MyCONF
+event.createEvent.create=Add conference
 
 # Live table generic keys
 event.livetable.doc.title=Page Title
@@ -81,6 +95,7 @@ event.livetable.endDate=End date
 event.livetable.description=Description
 event.livetable.responsible=Responsible
 event.livetable.participants=Participants
+event.livetable.abstractDeadline=Abs deadline
 
 # Other keys
 event.entry.name=Event
