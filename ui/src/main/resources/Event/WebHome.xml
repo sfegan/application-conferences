@@ -225,7 +225,7 @@
     <property>
       <parameters>label=Conferences
 target=Event.WebHome
-icon=icon:calendar</parameters>
+icon=icon:comments</parameters>
     </property>
     <property>
       <scope>wiki</scope>
