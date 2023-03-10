@@ -101,7 +101,7 @@ event.livetable.participants=Participants
 event.livetable.abstractDeadline=Abs deadline
 
 # Other keys
-event.entry.name=Event
+event.entry.name=Conference
 
 # Deprecated keys
 event.dataSpace.title=Data

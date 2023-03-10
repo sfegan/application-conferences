@@ -249,10 +249,10 @@
       <creationRestrictionsAreSuggestions>1</creationRestrictionsAreSuggestions>
     </property>
     <property>
-      <description>Create a new event</description>
+      <description>Create new conference</description>
     </property>
     <property>
-      <icon>calendar</icon>
+      <icon>comments</icon>
     </property>
     <property>
       <name>event.entry.name</name>
