@@ -31,64 +31,64 @@
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>8.15</version>
-  <title>Events</title>
+  <title>Conferences</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>false</hidden>
-  <content>{{velocity}};
-{{html wiki="true" clean="false"}};
-  &lt;div class="row"&gt;;
-    &lt;div class="col-xs-12"&gt;;
-#if(!$editing);
-  #if($hasEdit);
-      &lt;div style="background-color: powderblue; border: 2px solid navy; padding: 10px"&gt;;
-      &lt;h5&gt;$escapetool.xml($services.localization.render('event.createEvent.section_title'))&lt;/h5&gt;;
-      &lt;form action="$xwiki.getDocument('Main.WebHome').getURL('create')" class="xform" method="post"&gt;;
-    #set($discard = $xwiki.jsfx.use('js/xwiki/create.js', {'forceSkinAction': true}));
-    #set($escapedSpaceReference = $escapetool.xml($doc.Space));
-        &lt;input type="hidden" name="spaceReference" value="$escapedSpaceReference" /&gt;;
-        &lt;input type="hidden" name="template" value="Event.Code.EventTemplate" /&gt;;
-        &lt;div&gt;;
-          &lt;dl&gt;;
-            &lt;dt&gt;;
-              &lt;label for="targetTitle"&gt;$escapetool.xml($services.localization.render('event.createEvent.title'))&lt;/label&gt;;
-              &lt;span class="xHint"&gt;$escapetool.xml($services.localization.render('event.createEvent.title.hint'))&lt;/span&gt;;
-            &lt;/dt&gt;;
-            &lt;dd&gt;;
-              &lt;input type="text" id="targetTitle" name="name" value="" placeholder="$escapetool.xml($services.localization.render('event.createEvent.title.placeholder')) $datetool.year" /&gt;;
-            &lt;/dd&gt;;
-          &lt;/dl&gt;;
-          &lt;span class="buttonwrapper"&gt;;
-            &lt;input class="button" type="submit" value="$escapetool.xml($services.localization.render('event.createEvent.create'))"/&gt;;
-          &lt;/span&gt;;
-        &lt;/div&gt;;
-      &lt;/form&gt;;
-      &lt;/div&gt;;
-  #end;
-  #set ($columnsProperties = {;
-    'doc.title': {"displayName":"Title","link":"view"},;
-    'location': {},;
-    'startDate': {"html":true},;
-    'endDate': {"html":true},;
-    'abstractDeadline': {"html":true},;
-    '_actions': {"sortable":false,"filterable":false,"html":true,"actions":["edit","delete"]};
-  });
-  #set ($options = {;
-    'className': 'Event.Code.EventClass',;
-    'translationPrefix': 'event.livetable.',;
-    'tagCloud': true,;
-    'rowCount': 15,;
-    'maxPages': 10,;
-    'selectedColumn': 'doc.title',;
-    'defaultOrder': 'asc';
-  });
-  #set ($columns = ['doc.title', 'location', 'startDate', 'endDate', 'abstractDeadline', '_actions']);
-    #livetable('event' $columns $columnsProperties $options);
-    &lt;/div&gt;;
-  &lt;/div&gt;;
-{{/html}};
-#end;
+  <content>{{velocity}}
+{{html wiki="true" clean="false"}}
+  &lt;div class="row"&gt;
+    &lt;div class="col-xs-12"&gt;
+#if(!$editing)
+  #if($hasEdit)
+      &lt;div style="background-color: powderblue; border: 2px solid navy; padding: 10px"&gt;
+      &lt;h5 style="margin-top: 2px"&gt;$escapetool.xml($services.localization.render('event.createEvent.section_title'))&lt;/h5&gt;
+      &lt;form action="$xwiki.getDocument('Main.WebHome').getURL('create')" class="xform" method="post"&gt;
+    #set($discard = $xwiki.jsfx.use('js/xwiki/create.js', {'forceSkinAction': true}))
+    #set($escapedSpaceReference = $escapetool.xml($doc.Space))
+        &lt;input type="hidden" name="spaceReference" value="$escapedSpaceReference" /&gt;
+        &lt;input type="hidden" name="template" value="Event.Code.EventTemplate" /&gt;
+        &lt;div&gt;
+          &lt;dl&gt;
+            &lt;dt&gt;
+              &lt;label for="targetTitle"&gt;$escapetool.xml($services.localization.render('event.createEvent.title'))&lt;/label&gt;
+              &lt;span class="xHint"&gt;$escapetool.xml($services.localization.render('event.createEvent.title.hint'))&lt;/span&gt;
+            &lt;/dt&gt;
+            &lt;dd&gt;
+              &lt;input type="text" id="targetTitle" name="name" value="" placeholder="$escapetool.xml($services.localization.render('event.createEvent.title.placeholder')) $datetool.year" /&gt;
+            &lt;/dd&gt;
+          &lt;/dl&gt;
+          &lt;span class="buttonwrapper"&gt;
+            &lt;input class="button" type="submit" value="$escapetool.xml($services.localization.render('event.createEvent.create'))"/&gt;
+          &lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/form&gt;
+      &lt;/div&gt;
+  #end
+  #set ($columnsProperties = {
+    'doc.title': {"displayName":"Title","link":"view"},
+    'location': {},
+    'startDate': {"html":true},
+    'endDate': {"html":true},
+    'abstractDeadline': {"html":true},
+    '_actions': {"sortable":false,"filterable":false,"html":true,"actions":["edit","delete"]}
+  })
+  #set ($options = {
+    'className': 'Event.Code.EventClass',
+    'translationPrefix': 'event.livetable.',
+    'tagCloud': true,
+    'rowCount': 15,
+    'maxPages': 10,
+    'selectedColumn': 'doc.title',
+    'defaultOrder': 'asc'
+  })
+  #set ($columns = ['doc.title', 'location', 'startDate', 'endDate', 'abstractDeadline', '_actions'])
+    #livetable('event' $columns $columnsProperties $options)
+    &lt;/div&gt;
+  &lt;/div&gt;
+{{/html}}
+#end
 {{/velocity}}</content>
   <object>
     <name>Event.WebHome</name>
@@ -223,7 +223,7 @@
       <name>platform.panels.EventApplication</name>
     </property>
     <property>
-      <parameters>label=Events
+      <parameters>label=Conferences
 target=Event.WebHome
 icon=icon:calendar</parameters>
     </property>
