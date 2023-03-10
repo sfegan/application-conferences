@@ -31,7 +31,7 @@
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>8.15</version>
-  <title>Conferences</title>
+  <title>$services.localization.render('event.title')</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
@@ -223,7 +223,7 @@
       <name>platform.panels.EventApplication</name>
     </property>
     <property>
-      <parameters>label=Conferences
+      <parameters>label=$services.localization.render('event.title')
 target=Event.WebHome
 icon=icon:comments</parameters>
     </property>

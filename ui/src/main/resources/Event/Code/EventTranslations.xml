@@ -62,6 +62,9 @@ event.sheet.createPresentation.title.hint=Title of the new presentation
 event.sheet.createPresentation.title.placeholder=My presentation
 event.sheet.createPresentation.create=Create presentation
 
+# WebHome keys
+event.title=Conferences
+
 # Event creation keys
 event.createEvent.section_title=Add new conference
 event.createEvent.title=Conference name
