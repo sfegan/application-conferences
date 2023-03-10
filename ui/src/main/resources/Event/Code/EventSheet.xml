@@ -92,6 +92,8 @@
             &lt;dd&gt;$doc.display('conferenceURL')&lt;/dd&gt;
           &lt;/dl&gt;
         &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class="row"&gt;
         &lt;div class="col-sm-6"&gt;
           &lt;dl&gt;
             &lt;dt #if (!$editing &amp;&amp; $hasEdit)
@@ -118,6 +120,8 @@
             &lt;dd&gt;$doc.display('endDate')&lt;/dd&gt;
           &lt;/dl&gt;
         &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class="row"&gt;
         &lt;div class="col-sm-6"&gt;
           &lt;dl&gt;
             &lt;dt #if (!$editing &amp;&amp; $hasEdit)
@@ -144,6 +148,8 @@
             &lt;dd&gt;$doc.display('proceedingsDeadline')&lt;/dd&gt;
           &lt;/dl&gt;
         &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class="row"&gt;
         &lt;div class="col-sm-6"&gt;
           &lt;dl&gt;
             &lt;dt #if (!$editing &amp;&amp; $hasEdit)
@@ -170,6 +176,8 @@
             &lt;dd&gt;$doc.display('approvalBy')&lt;/dd&gt;
           &lt;/dl&gt;
         &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class="row"&gt;
         &lt;div class="col-sm-12"&gt;
           &lt;dl&gt;
             &lt;dt #if (!$editing &amp;&amp; $hasEdit)
@@ -183,6 +191,8 @@
             &lt;dd&gt;$doc.display('participants')&lt;/dd&gt;
           &lt;/dl&gt;
         &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class="row"&gt;
         &lt;div class="col-xs-12"&gt;
           &lt;dl&gt;
             &lt;dt #if (!$editing &amp;&amp; $hasEdit)
