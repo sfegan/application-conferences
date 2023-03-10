@@ -235,71 +235,54 @@
 #if(!$editing)
   &lt;div class="row"&gt;
     &lt;div class="col-xs-12"&gt;
-      &lt;h2&gt;Presentations&lt;/h2&gt;
-          #if ($hasEdit)
-          &lt;form action="$doc.getURL('create')" class="xform" method="post" name="createPresentation"&gt;
-            #set($discard = $xwiki.jsfx.use('js/xwiki/create.js', {'forceSkinAction': true}))
-            ## Keep some backward compatibility and pass the parent of the page
-            ## We will also use the parent field to transfer the name of teh event on which this new presentation should be linked to
-            #set($escapedEventReference = $escapetool.xml($services.model.serialize($doc.documentReference, 'local')))
-            &lt;input type="hidden" name="parent" value="$escapedEventReference" /&gt;
-            ## The template provider is needed for the create action
-            &lt;input type="hidden" name="templateprovider" value="" /&gt;
-            &lt;input type="hidden" name="template" value="Presentation.Code.PresentationTemplate" /&gt;
-            &lt;div&gt;
-              #template('locationPicker_macros.vm')
-              #locationPicker({
-               'id': 'target',
-               'title': {
-                  'label': 'event.sheet.createPresentation.title',
-                  'hint': 'event.sheet.createPresentation.title.hint',
-                  'name': 'title',
-                  'placeholder': 'event.sheet.createPresentation.title.placeholder'
-                },
-                'preview': {
-                  'label': 'core.create.locationPreview.label',
-                  'hint': 'core.create.locationPreview.hint'
-                },
-                'parent': {
-                  'label': 'core.create.spaceReference.label',
-                  'hint': 'core.create.spaceReference.hint',
-                  'name': 'spaceReference',
-                  'reference': $doc.documentReference.parent,
-                  'placeholder': 'core.create.spaceReference.placeholder'
-                },
-                'name': {
-                  'label': 'core.create.name.label',
-                  'hint': 'core.create.name.hint',
-                  'name': 'name',
-                  'placeholder': 'core.create.name.placeholder'
-                }
-              })
-              &lt;span class="buttonwrapper"&gt;
-                &lt;input class="button" type="submit" value="$escapetool.xml($services.localization.render('event.sheet.createPresentation.create'))"/&gt;
-              &lt;/span&gt;
-            &lt;/div&gt;
-          &lt;/form&gt;
-          #end
-          #set ($columnsProperties = {
-            'doc.title': {"displayName":"Title","link":"view"},
-            'presenters': {"html":true},
-            'reviewers': {"html":true},
-            'status': {'type': 'list', 'html': true},
-            'event': {'type': 'hidden'},
-            '_actions': {"sortable":false,"filterable":false,"html":true,"actions":["edit","delete"]}
-          })
-          #set ($options = {
-            'className': 'Presentation.Code.PresentationClass',
-            'translationPrefix': 'presentation.livetable.',
-            'tagCloud': true,
-            'rowCount': 15,
-            'maxPages': 10,
-            'selectedColumn': 'doc.title',
-            'defaultOrder': 'asc',
-            'extraParams': "event=${escapetool.url($doc.fullName)}"
-          })
-          #set ($columns = ['doc.title', 'presenters', 'reviewers', 'status', '_actions', 'event'])
-          #livetable('presentations' $columns $columnsProperties $options)
+      &lt;h2&gt;$escapetool.xml($services.localization.render('event.sheet.presentations'))&lt;/h2&gt;
+      #if ($hasEdit)
+      &lt;div style="background-color: powderblue; border: 2px solid navy; padding: 10px"&gt;
+        &lt;h5 style="margin-top: 2px"&gt;$escapetool.xml($services.localization.render('event.sheet.createPresentation.section_title')) $services.localization.render($doc.title)&lt;/h5&gt;
+        &lt;form action="$xwiki.getDocument('Main.WebHome').getURL('create')" class="xform" method="post"&gt;
+          #set($discard = $xwiki.jsfx.use('js/xwiki/create.js', {'forceSkinAction': true}))
+          #set($escapedSpaceReference = $escapetool.xml($doc.Space))
+          &lt;input type="hidden" name="spaceReference" value="$escapedSpaceReference" /&gt;
+          &lt;input type="hidden" name="template" value="Presentation.Code.PresentationTemplate" /&gt;
+          #set($escapedEventReference = $escapetool.xml($services.model.serialize($doc.documentReference, 'local')))
+          &lt;input type="hidden" name="parent" value="$escapedEventReference" /&gt;
+          &lt;div&gt;
+            &lt;dl&gt;
+              &lt;dt&gt;
+                &lt;label for="targetTitle"&gt;$escapetool.xml($services.localization.render('event.sheet.createPresentation.title'))&lt;/label&gt;
+                &lt;span class="xHint"&gt;$escapetool.xml($services.localization.render('event.sheet.createPresentation.title.hint'))&lt;/span&gt;
+              &lt;/dt&gt;
+              &lt;dd&gt;
+                &lt;input type="text" id="targetTitle" name="name" value="" placeholder="$escapetool.xml($services.localization.render('event.sheet.createPresentation.title.placeholder'))" /&gt;
+              &lt;/dd&gt;
+            &lt;/dl&gt;
+            &lt;span class="buttonwrapper"&gt;
+              &lt;input class="button" type="submit" value="$escapetool.xml($services.localization.render('event.sheet.createPresentation.create'))"/&gt;
+            &lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/form&gt;
+      &lt;/div&gt;
+      #end
+      #set ($columnsProperties = {
+        'doc.title': {"displayName":"Title","link":"view"},
+        'presenters': {"html":true},
+        'reviewers': {"html":true},
+        'status': {'type': 'list', 'html': true},
+        'event': {'type': 'hidden'},
+        '_actions': {"sortable":false,"filterable":false,"html":true,"actions":["edit","delete"]}
+      })
+      #set ($options = {
+        'className': 'Presentation.Code.PresentationClass',
+        'translationPrefix': 'presentation.livetable.',
+        'tagCloud': true,
+        'rowCount': 15,
+        'maxPages': 10,
+        'selectedColumn': 'doc.title',
+        'defaultOrder': 'asc',
+        'extraParams': "event=${escapetool.url($doc.fullName)}"
+       })
+       #set ($columns = ['doc.title', 'presenters', 'reviewers', 'status', '_actions', 'event'])
+       #livetable('presentations' $columns $columnsProperties $options)
     &lt;/div&gt;
   &lt;/div&gt;
 #end

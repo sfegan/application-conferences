@@ -56,11 +56,12 @@ Event.Code.EventClass_proceedingsDeadline=Proceedings deadline
 event.sheet.description=This page controls how Event pages are displayed in both view and edit modes.
 event.sheet.noObject=The current page doesn't have the expected Event object.
 event.sheet.noFields=The Event application doesn't have any fields to display.
-event.sheet.presentations=Presentations
-event.sheet.createPresentation.title=Presentation title
-event.sheet.createPresentation.title.hint=Title of the new presentation
-event.sheet.createPresentation.title.placeholder=My presentation
-event.sheet.createPresentation.create=Create presentation
+event.sheet.presentations=Contributions
+event.sheet.createPresentation.section_title=Add new contribution to
+event.sheet.createPresentation.title=Contribution title
+event.sheet.createPresentation.title.hint=Title of the contribution. Must be unique to this conference.
+event.sheet.createPresentation.title.placeholder=The very catchy title of my contribution.
+event.sheet.createPresentation.create=Add contribution
 
 # WebHome keys
 event.title=Conferences
