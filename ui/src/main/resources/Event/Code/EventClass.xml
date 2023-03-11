@@ -132,7 +132,7 @@
     </endDate>
     <hasProceedings>
       <customDisplay/>
-      <defaultValue/>
+      <defaultValue>0</defaultValue>
       <disabled>0</disabled>
       <displayFormType>select</displayFormType>
       <displayType/>
@@ -204,7 +204,7 @@
       <cache>0</cache>
       <customDisplay/>
       <defaultValue/>
-      <disabled>0</disabled>
+      <disabled>1</disabled>
       <displayType>select</displayType>
       <freeText/>
       <hint/>
