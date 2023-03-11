@@ -220,7 +220,8 @@
         &lt;/dt&gt;
         &lt;dd&gt;
           $doc.display('location')
-          #if($doc.getValue('location') != '' &amp;&amp; !$editing &amp;&amp; $services.rendering.getMacroDescriptor($services.rendering.resolveMacroId('map')))
+          #set($online = ['online', 'virtual', 'remote', 'web', 'video', 'teleconference', 'telecon', 'webinar', 'digital', 'zoom', 'teams', 'microsoft', 'microsoft teams', 'meet', 'google', 'google meet', 'webex', 'cisco', 'cisco webex', 'gotomeeting', 'skype', 'microsoft skype', 'facetime', 'apple', 'apple facetime', 'connect', 'adobe', 'adobe connect'])
+          #if($doc.getValue('location') != '' &amp;&amp; !$online.contains($doc.getValue('location').toLowerCase()) &amp;&amp; !$editing &amp;&amp; $services.rendering.getMacroDescriptor($services.rendering.resolveMacroId('map')))
           {{/html}}
 
           {{map location="$doc.getValue('location')" width="100%"/}}
@@ -244,6 +245,7 @@
           #set($escapedSpaceReference = $escapetool.xml($doc.Space))
           &lt;input type="hidden" name="spaceReference" value="$escapedSpaceReference" /&gt;
           &lt;input type="hidden" name="template" value="Presentation.Code.PresentationTemplate" /&gt;
+          &lt;input type="hidden" name="tocreate" value="terminal" /&gt;
           #set($escapedEventReference = $escapetool.xml($services.model.serialize($doc.documentReference, 'local')))
           &lt;input type="hidden" name="parent" value="$escapedEventReference" /&gt;
           &lt;div&gt;
