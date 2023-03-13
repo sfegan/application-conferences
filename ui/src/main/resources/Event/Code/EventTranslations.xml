@@ -47,6 +47,7 @@ Event.Code.EventClass_participants=Participants
 Event.Code.EventClass_conferenceURL=Conference URL
 Event.Code.EventClass_abstractDeadline=Abstract deadline
 Event.Code.EventClass_approvalBy=Approval by
+Event.Code.EventClass_approvalBy_both=SWG &amp; SAPO
 Event.Code.EventClass_approvalBy_sapo=SAPO
 Event.Code.EventClass_approvalBy_swg=SWG
 Event.Code.EventClass_hasProceedings=Has proceedings
@@ -59,8 +60,8 @@ event.sheet.noFields=The Event application doesn't have any fields to display.
 event.sheet.presentations=Contributions
 event.sheet.createPresentation.section_title=Add new contribution to
 event.sheet.createPresentation.title=Contribution title
-event.sheet.createPresentation.title.hint=Title of the contribution. Must be unique to this conference.
-event.sheet.createPresentation.title.placeholder=The very catchy title of my contribution.
+event.sheet.createPresentation.title.hint=Title of the talk or poster. Must be unique to this conference.
+event.sheet.createPresentation.title.placeholder=The very catchy title of my talk or poster.
 event.sheet.createPresentation.create=Add contribution
 
 # WebHome keys

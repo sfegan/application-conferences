@@ -65,7 +65,7 @@
     <approvalBy>
       <cache>0</cache>
       <customDisplay/>
-      <defaultValue>sapo</defaultValue>
+      <defaultValue>both</defaultValue>
       <disabled>0</disabled>
       <displayType>select</displayType>
       <freeText>forbidden</freeText>
@@ -75,7 +75,7 @@
       <name>approvalBy</name>
       <number>10</number>
       <picker>1</picker>
-      <prettyName>Approval By</prettyName>
+      <prettyName>Approval by</prettyName>
       <relationalStorage>0</relationalStorage>
       <separator> </separator>
       <separators>|, </separators>
@@ -84,7 +84,7 @@
       <unmodifiable>0</unmodifiable>
       <validationMessage/>
       <validationRegExp/>
-      <values>sapo=SAPO|swg=SWG</values>
+      <values>both=SWG &amp; SAPO|swg=SWG|sapo=SAPO</values>
       <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
     </approvalBy>
     <conferenceURL>
