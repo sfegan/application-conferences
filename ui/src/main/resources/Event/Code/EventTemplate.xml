@@ -51,6 +51,61 @@
       <defaultWeb/>
       <nameField/>
       <validationScript/>
+      <abstractDeadline>
+        <customDisplay>{{include reference="AppWithinMinutes.DateDisplayer" /}}</customDisplay>
+        <dateFormat>dd/MM/yyyy</dateFormat>
+        <disabled>0</disabled>
+        <emptyIsToday>0</emptyIsToday>
+        <hint/>
+        <name>abstractDeadline</name>
+        <number>9</number>
+        <picker>1</picker>
+        <prettyName>Abstract Deadline</prettyName>
+        <size>20</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.DateClass</classType>
+      </abstractDeadline>
+      <approvalBy>
+        <cache>0</cache>
+        <customDisplay/>
+        <defaultValue>both</defaultValue>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <hint/>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>approvalBy</name>
+        <number>10</number>
+        <picker>1</picker>
+        <prettyName>Approval by</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <sort/>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <values>both=SWG &amp; SAPO|swg=SWG|sapo=SAPO</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </approvalBy>
+      <conferenceURL>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <hint/>
+        <name>conferenceURL</name>
+        <number>8</number>
+        <picker>1</picker>
+        <prettyName>Conference URL</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </conferenceURL>
       <description>
         <customDisplay>{{include reference="AppWithinMinutes.Content"/}}</customDisplay>
         <disabled>0</disabled>
@@ -80,6 +135,21 @@
         <validationRegExp/>
         <classType>com.xpn.xwiki.objects.classes.DateClass</classType>
       </endDate>
+      <hasProceedings>
+        <customDisplay/>
+        <defaultValue>0</defaultValue>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType/>
+        <hint/>
+        <name>hasProceedings</name>
+        <number>11</number>
+        <prettyName>Has Proceedings</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </hasProceedings>
       <location>
         <customDisplay/>
         <disabled>0</disabled>
@@ -119,11 +189,27 @@
         <validationRegExp/>
         <classType>com.xpn.xwiki.objects.classes.UsersClass</classType>
       </participants>
+      <proceedingsDeadline>
+        <customDisplay>{{include reference="AppWithinMinutes.DateDisplayer" /}}</customDisplay>
+        <dateFormat>dd/MM/yyyy</dateFormat>
+        <disabled>0</disabled>
+        <emptyIsToday>0</emptyIsToday>
+        <hint/>
+        <name>proceedingsDeadline</name>
+        <number>12</number>
+        <picker>1</picker>
+        <prettyName>Proceedings Deadline</prettyName>
+        <size>20</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.DateClass</classType>
+      </proceedingsDeadline>
       <responsible>
         <cache>0</cache>
         <customDisplay/>
         <defaultValue/>
-        <disabled>0</disabled>
+        <disabled>1</disabled>
         <displayType>select</displayType>
         <freeText/>
         <hint/>
@@ -175,13 +261,28 @@
       </title>
     </class>
     <property>
+      <abstractDeadline/>
+    </property>
+    <property>
+      <approvalBy/>
+    </property>
+    <property>
+      <conferenceURL/>
+    </property>
+    <property>
       <endDate/>
+    </property>
+    <property>
+      <hasProceedings/>
     </property>
     <property>
       <location/>
     </property>
     <property>
       <participants/>
+    </property>
+    <property>
+      <proceedingsDeadline/>
     </property>
     <property>
       <responsible/>
