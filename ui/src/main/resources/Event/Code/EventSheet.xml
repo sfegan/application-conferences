@@ -57,21 +57,24 @@
 #set ($discard = $doc.use($object))
 #set ($discard = $xwiki.ssx.use('Event.Code.EventSheet'))
 #set ($editing = $xcontext.action == 'edit')
+#macro( renderEditableProperty $property $icon $userCanEdit )
+  &lt;dt #if (!$editing &amp;&amp; $userCanEdit)
+      class="editableProperty"
+      data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference($property)))"
+      data-property-type="object"#end&gt;
+    &lt;label#if ($editing) for="Event.Code.EventClass_0_$property"#end&gt;
+      $services.icon.render($icon) $escapetool.xml($doc.displayPrettyName($property, false, false))
+    &lt;/label&gt;
+  &lt;/dt&gt;
+  &lt;dd&gt;$doc.display($property)&lt;/dd&gt;
+#end
 {{html wiki="true" clean="false"}}
 &lt;div class="xform"&gt;
   #if($editing)
   &lt;div class="row"&gt;
     &lt;div class="col-md-12"&gt;
       &lt;dl&gt;
-        &lt;dt #if (!$editing &amp;&amp; $hasEdit)
-            class="editableProperty"
-            data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('title')))"
-            data-property-type="object"#end&gt;
-          &lt;label#if ($editing) for="Event.Code.EventClass_0_title"#end&gt;
-            $services.icon.render('font') $escapetool.xml($doc.displayPrettyName('title', false, false))
-          &lt;/label&gt;
-        &lt;/dt&gt;
-        &lt;dd&gt;$doc.display('title')&lt;/dd&gt;
+        #renderEditableProperty('title', 'font', $hasEdit)
       &lt;/dl&gt;
     &lt;/div&gt;
   &lt;/div&gt;
@@ -81,129 +84,57 @@
       &lt;div class="row"&gt;
         &lt;div class="col-sm-12"&gt;
           &lt;dl&gt;
-            &lt;dt #if (!$editing &amp;&amp; $hasEdit)
-                class="editableProperty"
-                data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('conferenceURL')))"
-                data-property-type="object"#end&gt;
-              &lt;label#if ($editing) for="Event.Code.EventClass_0_conferenceURL"#end&gt;
-                $services.icon.render('wiki') $escapetool.xml($doc.displayPrettyName('conferenceURL', false, false))
-              &lt;/label&gt;
-            &lt;/dt&gt;
-            &lt;dd&gt;$doc.display('conferenceURL')&lt;/dd&gt;
+            #renderEditableProperty('conferenceURL', 'wiki', $hasEdit)
           &lt;/dl&gt;
         &lt;/div&gt;
       &lt;/div&gt;
       &lt;div class="row"&gt;
         &lt;div class="col-sm-6"&gt;
           &lt;dl&gt;
-            &lt;dt #if (!$editing &amp;&amp; $hasEdit)
-                class="editableProperty"
-                data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('startDate')))"
-                data-property-type="object"#end&gt;
-              &lt;label#if ($editing) for="Event.Code.EventClass_0_startDate"#end&gt;
-                $services.icon.render('calendar') $escapetool.xml($doc.displayPrettyName('startDate', false, false))
-              &lt;/label&gt;
-            &lt;/dt&gt;
-            &lt;dd&gt;$doc.display('startDate')&lt;/dd&gt;
+            #renderEditableProperty('startDate', 'calendar', $hasEdit)
           &lt;/dl&gt;
         &lt;/div&gt;
         &lt;div class="col-sm-6"&gt;
           &lt;dl&gt;
-            &lt;dt #if (!$editing &amp;&amp; $hasEdit)
-                class="editableProperty"
-                data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('endDate')))"
-                data-property-type="object"#end&gt;
-              &lt;label#if ($editing) for="Event.Code.EventClass_0_endDate"#end&gt;
-                $services.icon.render('calendar') $escapetool.xml($doc.displayPrettyName('endDate', false, false))
-              &lt;/label&gt;
-            &lt;/dt&gt;
-            &lt;dd&gt;$doc.display('endDate')&lt;/dd&gt;
+            #renderEditableProperty('endDate', 'calendar', $hasEdit)
           &lt;/dl&gt;
         &lt;/div&gt;
       &lt;/div&gt;
       &lt;div class="row"&gt;
         &lt;div class="col-sm-6"&gt;
           &lt;dl&gt;
-            &lt;dt #if (!$editing &amp;&amp; $hasEdit)
-                class="editableProperty"
-                data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('abstractDeadline')))"
-                data-property-type="object"#end&gt;
-              &lt;label#if ($editing) for="Event.Code.EventClass_0_abstractDeadline"#end&gt;
-                $services.icon.render('calendar') $escapetool.xml($doc.displayPrettyName('abstractDeadline', false, false))
-              &lt;/label&gt;
-            &lt;/dt&gt;
-            &lt;dd&gt;$doc.display('abstractDeadline')&lt;/dd&gt;
+            #renderEditableProperty('abstractDeadline', 'calendar', $hasEdit)
           &lt;/dl&gt;
         &lt;/div&gt;
         &lt;div class="col-sm-6"&gt;
           &lt;dl&gt;
-            &lt;dt #if (!$editing &amp;&amp; $hasEdit)
-                class="editableProperty"
-                data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('proceedingsDeadline')))"
-                data-property-type="object"#end&gt;
-              &lt;label#if ($editing) for="Event.Code.EventClass_0_proceedingsDeadline"#end&gt;
-                $services.icon.render('calendar') $escapetool.xml($doc.displayPrettyName('proceedingsDeadline', false, false))
-              &lt;/label&gt;
-            &lt;/dt&gt;
-            &lt;dd&gt;$doc.display('proceedingsDeadline')&lt;/dd&gt;
+            #renderEditableProperty('proceedingsDeadline', 'calendar', $hasEdit)
           &lt;/dl&gt;
         &lt;/div&gt;
       &lt;/div&gt;
       &lt;div class="row"&gt;
         &lt;div class="col-sm-6"&gt;
           &lt;dl&gt;
-            &lt;dt #if (!$editing &amp;&amp; $hasEdit)
-                class="editableProperty"
-                data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('hasProceedings')))"
-                data-property-type="object"#end&gt;
-              &lt;label#if ($editing) for="Event.Code.EventClass_0_hasProceedings"#end&gt;
-                $services.icon.render('list') $escapetool.xml($doc.displayPrettyName('hasProceedings', false, false))
-              &lt;/label&gt;
-            &lt;/dt&gt;
-            &lt;dd&gt;$doc.display('hasProceedings')&lt;/dd&gt;
+            #renderEditableProperty('hasProceedings', 'book', $hasEdit)
           &lt;/dl&gt;
         &lt;/div&gt;
         &lt;div class="col-sm-6"&gt;
           &lt;dl&gt;
-            &lt;dt #if (!$editing &amp;&amp; $hasEdit)
-                class="editableProperty"
-                data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('approvalBy')))"
-                data-property-type="object"#end&gt;
-              &lt;label#if ($editing) for="Event.Code.EventClass_0_approvalBy"#end&gt;
-                $services.icon.render('list') $escapetool.xml($doc.displayPrettyName('approvalBy', false, false))
-              &lt;/label&gt;
-            &lt;/dt&gt;
-            &lt;dd&gt;$doc.display('approvalBy')&lt;/dd&gt;
+            #renderEditableProperty('approvalBy', 'check', $hasEdit)
           &lt;/dl&gt;
         &lt;/div&gt;
       &lt;/div&gt;
       &lt;div class="row"&gt;
         &lt;div class="col-sm-12"&gt;
           &lt;dl&gt;
-            &lt;dt #if (!$editing &amp;&amp; $hasEdit)
-                class="editableProperty"
-                data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('participants')))"
-                data-property-type="object"#end&gt;
-              &lt;label#if ($editing) for="Event.Code.EventClass_0_participants"#end&gt;
-                $services.icon.render('group') $escapetool.xml($doc.displayPrettyName('participants', false, false))
-              &lt;/label&gt;
-            &lt;/dt&gt;
-            &lt;dd&gt;$doc.display('participants')&lt;/dd&gt;
+            #renderEditableProperty('participants', 'group', $hasEdit)
           &lt;/dl&gt;
         &lt;/div&gt;
       &lt;/div&gt;
       &lt;div class="row"&gt;
         &lt;div class="col-xs-12"&gt;
           &lt;dl&gt;
-            &lt;dt #if (!$editing &amp;&amp; $hasEdit)
-                class="editableProperty"
-                data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('description')))"
-                data-property-type="object"#end&gt;
-              &lt;label#if ($editing) for="Event.Code.EventClass_0_description"#end&gt;
-                $services.icon.render('list') $escapetool.xml($doc.displayPrettyName('description', false, false))
-              &lt;/label&gt;
-            &lt;/dt&gt;
-            &lt;dd&gt;$doc.display('description')&lt;/dd&gt;
+            #renderEditableProperty('description', 'list', $hasEdit)
           &lt;/dl&gt;
         &lt;/div&gt;
       &lt;/div&gt;
