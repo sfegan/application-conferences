@@ -38,22 +38,24 @@
   <hidden>true</hidden>
   <content>{{velocity}}
 #if ($type == 'edit')
-  {{attachmentSelector className="Presentation.Code.PresentationClass" property="slides" filter="pdf,odp,ppt,pptx"/}}
+  {{attachmentSelector className="Presentation.Code.PresentationClass" property="$name" filter="pdf,odp,ppt,pptx"/}}
 #elseif (($type == 'view') &amp;&amp; ($!value!=''))
   #if($value.endsWith('.pdf'))
     #if($services.rendering.getMacroDescriptor($services.rendering.resolveMacroId('pdfviewer')))
-      {{pdfviewer file="$value"/}}
+      [[attach:$value]]
+      
+      {{pdfviewer file="$value" height=400/}}
     #elseif ($hasAdmin)
-      [[$services.localization.render('presentation.sheet.slides.pdfViewerMissing')&gt;&gt;XWiki.XWikiPreferences||queryString="section=XWiki.Extensions&amp;search=pdfviewer"]]
-      $value
+      [[$services.localization.render('presentation.sheet.slides.pdfViewerMissing')>>XWiki.XWikiPreferences||queryString="section=XWiki.Extensions&amp;search=pdfviewer"]]
+      [[attach:$value]]
     #else
-      $value
+      [[attach:$value]]
     #end
   #else
   {{office attachment="$value"/}}
   #end
-#else
-  $value
+#elseif ($!value!='')
+  [[attach:$value]]
 #end
 {{/velocity}}</content>
 </xwikidoc>

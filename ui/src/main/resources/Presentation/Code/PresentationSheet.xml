@@ -56,38 +56,135 @@
 }))
 #set ($discard = $doc.use($object))
 #set ($editing = $xcontext.action == 'edit')
+#macro( renderEditableProperty $property $icon $userCanEdit )
+  &lt;dt #if (!$editing &amp;&amp; $userCanEdit)
+      class="editableProperty"
+      data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference($property)))"
+      data-property-type="object"#end&gt;
+    &lt;label#if ($editing) for="Event.Code.EventClass_0_$property"#end&gt;
+      $services.icon.render($icon) $escapetool.xml($doc.displayPrettyName($property, false, false))
+    &lt;/label&gt;
+  &lt;/dt&gt;
+  #if($editing &amp;&amp; !$userCanEdit)
+    &lt;dd&gt;$doc.display($property, 'view')&lt;/dd&gt;
+  #else
+    &lt;dd&gt;$doc.display($property)&lt;/dd&gt;
+  #end
+#end
+#macro( renderApproval $property $approval $userCanEdit )
+  #set( $iconName = {"pending" : "clock", "approved" : "check", "rejected" : "remove"} )
+  #set( $iconSetName = {"pending" : "Font Awesome", "approved" : "Silk", "rejected" : "Silk"} )
+  #set( $label = "Presentation.Code.PresentationClass_$property" )
+  #if( $property == "talkApproval" &amp;&amp; $object.getValue("type") == "poster" )
+    #set( $label = "Presentation.Code.PresentationClass_posterApproval" )
+  #end
+  #if($approval == "swg")
+    #set ($propertyGroup = "${property}SWG")
+    #set ($value = ${object.getValue($propertyGroup)|"pending"})
+      &lt;dt #if (!$editing &amp;&amp; $userCanEdit)
+          class="editableProperty"
+          data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference($propertyGroup)))"
+          data-property-type="object"#end&gt;
+        &lt;label#if ($editing) for="Event.Code.EventClass_0_$propertyGroup"#end&gt;
+           $services.icon.render(${iconName[$value]|"question"}, ${iconSetName[$value]|"Font Awesome"}) $escapetool.xml($services.localization.render($label))#* ($escapetool.xml($services.localization.render("Presentation.Code.PresentationClass_$propertyGroup")))*#
+        &lt;/label&gt;
+      &lt;/dt&gt;
+      &lt;dd&gt;$doc.display($propertyGroup)&lt;/dd&gt;
+  #elseif($approval == "sapo")
+    #set ($propertyGroup = "${property}SAPO")
+    #set ($value = ${object.getValue($propertyGroup)|"pending"})
+      &lt;dt #if (!$editing &amp;&amp; $userCanEdit)
+          class="editableProperty"
+          data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference($propertyGroup)))"
+          data-property-type="object"#end&gt;
+        &lt;label#if ($editing) for="Event.Code.EventClass_0_$propertyGroup"#end&gt;
+          $services.icon.render(${iconName[$value]|"question"}, ${iconSetName[$value]|"Font Awesome"}) $escapetool.xml($services.localization.render($label))#* ($escapetool.xml($services.localization.render("Presentation.Code.PresentationClass_$propertyGroup")))*#
+        &lt;/label&gt;
+      &lt;/dt&gt;
+      &lt;dd&gt;$doc.display($propertyGroup)&lt;/dd&gt;
+  #else
+    #set ($propertyGroup = "${property}SWG")
+    #set ($value = ${object.getValue($propertyGroup)|"pending"})
+    #if($value == "approved" || ( $value == "pending" &amp;&amp; $object.getValue("${property}SAPO") == "rejected"))
+      #set($value = ${object.getValue("${property}SAPO")|"pending"})
+    #end
+  &lt;dt&gt;$services.icon.render(${iconName[$value]|"question"}, ${iconSetName[$value]|"Font Awesome"}) $escapetool.xml($services.localization.render($label))&lt;/dt&gt;
+  &lt;dd&gt;
+    &lt;table style="border: none; padding: 0; margin: 0; width:100%; text-align: left"&gt;
+      &lt;td style="border: none"&gt;
+        &lt;dl style="margin: 0; padding: 0"&gt;
+          &lt;dt #if (!$editing &amp;&amp; $userCanEdit)
+              class="editableProperty"
+              data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference($propertyGroup)))"
+              data-property-type="object"#end&gt;
+            &lt;label#if ($editing) for="Event.Code.EventClass_0_$propertyGroup"#end&gt;
+              $escapetool.xml($doc.displayPrettyName($propertyGroup, false, false))
+            &lt;/label&gt;
+          &lt;/dt&gt;
+          &lt;dd&gt;$doc.display($propertyGroup)&lt;/dd&gt;
+        &lt;/dl&gt;
+      &lt;/td&gt;
+      #set ($propertyGroup = "${property}SAPO")
+      &lt;td style="border: none"&gt;
+        &lt;dl style="margin: 0"&gt;
+          &lt;dt #if (!$editing &amp;&amp; $userCanEdit)
+              class="editableProperty"
+              data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference($propertyGroup)))"
+              data-property-type="object"#end&gt;
+            &lt;label#if ($editing) for="Event.Code.EventClass_0_$propertyGroup"#end&gt;
+              $escapetool.xml($doc.displayPrettyName($propertyGroup, false, false))
+            &lt;/label&gt;
+          &lt;/dt&gt;
+          &lt;dd&gt;$doc.display($propertyGroup)&lt;/dd&gt;
+        &lt;/dl&gt;
+      &lt;/td&gt;
+    &lt;/table&gt;
+  &lt;/dd&gt;
+  #end
+#end
 {{html wiki="true" clean="false"}}
 &lt;div class="xform"&gt;
   &lt;div class="row"&gt;
-    &lt;div class="col-sm-8"&gt;
-      &lt;dl&gt;
-        &lt;dt #if (!$editing &amp;&amp; $hasEdit)
-            class="editableProperty"
-            data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('title')))"
-            data-property-type="object"#end&gt;
-          &lt;label#if ($editing) for="Presentation.Code.PresentationClass_0_title"#end&gt;
-            $services.icon.render('font') $escapetool.xml($doc.displayPrettyName('title', false, false))
-          &lt;/label&gt;
-        &lt;/dt&gt;
-        &lt;dd&gt;$doc.display('title')&lt;/dd&gt;
-      &lt;/dl&gt;
-    &lt;/div&gt;
-    &lt;div class="col-sm-4"&gt;
-      &lt;dl&gt;
-        &lt;dt #if (!$editing &amp;&amp; $hasEdit)
-            class="editableProperty"
-            data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('status')))"
-            data-property-type="object"#end&gt;
-          &lt;label#if ($editing) for="Presentation.Code.PresentationClass_0_status"#end&gt;
-            $services.icon.render('list') $escapetool.xml($doc.displayPrettyName('status', false, false))
-          &lt;/label&gt;
-        &lt;/dt&gt;
-        &lt;dd&gt;$doc.display('status')&lt;/dd&gt;
-      &lt;/dl&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-  &lt;div class="row"&gt;
     &lt;div class="col-md-8"&gt;
+      &lt;dl&gt;
+        #renderEditableProperty('title', 'font', $hasEdit)
+      &lt;/dl&gt;
+      &lt;div class="row"&gt;
+        &lt;div class="col-sm-6"&gt;
+          &lt;dl&gt;
+            #renderEditableProperty('status', 'list', $hasEdit)
+          &lt;/dl&gt;
+        &lt;/div&gt;
+        &lt;div class="col-sm-6"&gt;
+          &lt;dl&gt;
+            #renderEditableProperty('presenters', 'comment', $hasEdit)
+          &lt;/dl&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class="row"&gt;
+        &lt;div class="col-sm-6"&gt;
+          &lt;dl&gt;            
+            #renderEditableProperty('type', 'eye', $hasEdit)
+          &lt;/dl&gt;
+        &lt;/div&gt;
+        &lt;div class="col-sm-6"&gt;
+          &lt;dl&gt;
+            #renderEditableProperty('hasProceedings', 'book', $hasEdit)
+          &lt;/dl&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class="row"&gt;
+        &lt;div class="col-sm-6"&gt;
+          &lt;dl&gt;            
+            #renderEditableProperty('proceedingsArxiv', 'world', $hasEdit)
+          &lt;/dl&gt;
+        &lt;/div&gt;
+        &lt;div class="col-sm-6"&gt;
+          &lt;dl&gt;
+           #renderEditableProperty('proceedingsDOI', 'world', $hasEdit)
+          &lt;/dl&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
       &lt;dl&gt;
         &lt;dt #if (!$editing &amp;&amp; $hasEdit)
             class="editableProperty"
@@ -95,62 +192,51 @@
             data-property-type="object"#end&gt;
           &lt;label#if ($editing) for="Presentation.Code.PresentationClass_0_abstract"#end&gt;
             $services.icon.render('list') $escapetool.xml($doc.displayPrettyName('abstract', false, false))
+            #if($doc.getValue('abstract').trim() != '')($object.getValue('abstract').trim().split('\W+').size() $escapetool.xml($services.localization.render('presentation.sheet.words')), $object.getValue('abstract').trim().length() $escapetool.xml($services.localization.render('presentation.sheet.chars')))#end
           &lt;/label&gt;
         &lt;/dt&gt;
         &lt;dd&gt;$doc.display('abstract')&lt;/dd&gt;
-        &lt;dt #if (!$editing &amp;&amp; $hasEdit)
-            class="editableProperty"
-            data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('description')))"
-            data-property-type="object"#end&gt;
-          &lt;label#if ($editing) for="Presentation.Code.PresentationClass_0_description"#end&gt;
-            $services.icon.render('list') $escapetool.xml($doc.displayPrettyName('description', false, false))
+        #renderEditableProperty('description', 'list', $hasEdit)
+        &lt;dt&gt;
+          &lt;label#if ($editing) for="Presentation.Code.PresentationClass_0_slides"#end&gt;
+            #set ($materialLabel = 'slides')
+            #if ($object.getValue('type') == "poster")
+              #set ($materialLabel = 'poster')
+            #end
+            $services.icon.render('image') $escapetool.xml($services.localization.render("Presentation.Code.PresentationClass_$materialLabel"))
           &lt;/label&gt;
         &lt;/dt&gt;
-        &lt;dd&gt;$doc.display('description')&lt;/dd&gt;
+        &lt;dd&gt;$doc.display('slides')&lt;/dd&gt;
+        #if( $editing || $object.getValue('hasProceedings')==1 )
+          &lt;dt&gt;
+            &lt;label#if ($editing) for="Presentation.Code.PresentationClass_0_proceedings"#end&gt;
+              $services.icon.render('book')   $escapetool.xml($services.localization.render("Presentation.Code.PresentationClass_proceedings"))
+            &lt;/label&gt;
+          &lt;/dt&gt;
+          &lt;dd&gt;$doc.display('proceedings')&lt;/dd&gt;
+        #end
       &lt;/dl&gt;
     &lt;/div&gt;
-    &lt;div class="col-md-4"&gt;
-      &lt;dl&gt;
+    &lt;div class="col-md-4" style="padding-left: 0"&gt;
+    &lt;div style="background-color: cornsilk; border: 2px solid sienna; padding: 10px"&gt;
+      &lt;h5&gt;$escapetool.xml($services.localization.render("presentation.sheet.sapo_header"))&lt;/h5&gt;
+      &lt;dl style="margin-bottom: 2px"&gt;
+        #renderEditableProperty('reviewers', 'search', $hasEdit)
         #set($parentDocument = $xwiki.getDocument($request.get('parent')))
         #if (!$parentDocument.isNew() &amp;&amp; $parentDocument.getObject('Event.Code.EventClass') &amp;&amp; $doc.isNew() &amp;&amp; $editing)
           ## Set-up the document to use the event passed in parent.
           &lt;input type="hidden" name="Presentation.Code.PresentationClass_0_event" value="$!{escapetool.xml($request.get('parent'))}"/&gt;
         #else
-          &lt;dt #if (!$editing &amp;&amp; $hasEdit)
-              class="editableProperty"
-              data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('event')))"
-              data-property-type="object"#end&gt;
-            &lt;label#if ($editing) for="Presentation.Code.PresentationClass_0_event"#end&gt;
-              $services.icon.render('flag') $escapetool.xml($doc.displayPrettyName('event', false, false))
-            &lt;/label&gt;
-          &lt;/dt&gt;
-          &lt;dd&gt;$doc.display('event')&lt;/dd&gt;
+          #renderEditableProperty('event', 'flag', $hasEdit)
         #end
-        &lt;dt #if (!$editing &amp;&amp; $hasEdit)
-            class="editableProperty"
-            data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('presenters')))"
-            data-property-type="object"#end&gt;
-          &lt;label#if ($editing) for="Presentation.Code.PresentationClass_0_presenters"#end&gt;
-            $services.icon.render('group') $escapetool.xml($doc.displayPrettyName('presenters', false, false))
-          &lt;/label&gt;
-        &lt;/dt&gt;
-        &lt;dd&gt;$doc.display('presenters')&lt;/dd&gt;
-        &lt;dt #if (!$editing &amp;&amp; $hasEdit)
-            class="editableProperty"
-            data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('reviewers')))"
-            data-property-type="object"#end&gt;
-          &lt;label#if ($editing) for="Presentation.Code.PresentationClass_0_reviewers"#end&gt;
-            $services.icon.render('group') $escapetool.xml($doc.displayPrettyName('reviewers', false, false))
-          &lt;/label&gt;
-        &lt;/dt&gt;
-        &lt;dd&gt;$doc.display('reviewers')&lt;/dd&gt;
-        &lt;dt&gt;
-          &lt;label#if ($editing) for="Presentation.Code.PresentationClass_0_slides"#end&gt;
-            $services.icon.render('image') $escapetool.xml($doc.displayPrettyName('slides', false, false))
-          &lt;/label&gt;
-        &lt;/dt&gt;
-        &lt;dd&gt;$doc.display('slides')&lt;/dd&gt;
+        #renderEditableProperty('approvalBy', 'check', $hasEdit)
+        #renderApproval('absApproval' $object.getValue('approvalBy') $hasEdit)
+        #renderApproval('talkApproval' $object.getValue('approvalBy') $hasEdit)
+        #if( $editing || $object.getValue('hasProceedings')==1 )
+          #renderApproval('procApproval' $object.getValue('approvalBy') $hasEdit)
+        #end
       &lt;/dl&gt;
+    &lt;/div&gt;
     &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;
