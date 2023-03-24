@@ -87,6 +87,23 @@
       <values>both=SWG &amp; SAPO|swg=SWG|sapo=SAPO</values>
       <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
     </approvalBy>
+    <bannerMessage>
+      <contenttype>FullyRenderedText</contenttype>
+      <customDisplay/>
+      <disabled>0</disabled>
+      <editor>---</editor>
+      <hint/>
+      <name>bannerMessage</name>
+      <number>13</number>
+      <picker>1</picker>
+      <prettyName>Banner Message for Presentations</prettyName>
+      <rows>5</rows>
+      <size>40</size>
+      <unmodifiable>0</unmodifiable>
+      <validationMessage/>
+      <validationRegExp/>
+      <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+    </bannerMessage>
     <conferenceURL>
       <customDisplay/>
       <disabled>0</disabled>

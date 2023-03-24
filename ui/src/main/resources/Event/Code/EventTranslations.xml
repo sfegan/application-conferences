@@ -52,6 +52,7 @@ Event.Code.EventClass_approvalBy_sapo=SAPO
 Event.Code.EventClass_approvalBy_swg=SWG
 Event.Code.EventClass_hasProceedings=Has proceedings
 Event.Code.EventClass_proceedingsDeadline=Proceedings deadline
+Event.Code.EventClass_bannerMessage=Banner message for contribution pages
 
 # Sheet keys
 event.sheet.description=This page controls how Event pages are displayed in both view and edit modes.
