@@ -270,12 +270,12 @@
       <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
     </procApprovalSWG>
     <proceedings>
-      <customDisplay>{{include reference="Presentation.Code.SlidesDisplayer"/}}</customDisplay>
+      <customDisplay/>
       <disabled>0</disabled>
       <hint/>
       <name>proceedings</name>
       <number>18</number>
-      <picker>1</picker>
+      <picker>0</picker>
       <prettyName>Proceedings</prettyName>
       <size>30</size>
       <unmodifiable>0</unmodifiable>
@@ -337,7 +337,7 @@
       <classType>com.xpn.xwiki.objects.classes.UsersClass</classType>
     </reviewers>
     <slides>
-      <customDisplay>{{include reference="Presentation.Code.SlidesDisplayer"/}}</customDisplay>
+      <customDisplay/>
       <disabled>0</disabled>
       <hint/>
       <name>slides</name>
@@ -463,6 +463,31 @@
       <values>invited=Invited talk|talk=Contributed talk|poster=Poster</values>
       <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
     </type>
+    <workingGroup>
+      <cache>0</cache>
+      <customDisplay/>
+      <defaultValue/>
+      <disabled>0</disabled>
+      <displayType>select</displayType>
+      <freeText/>
+      <hint/>
+      <largeStorage>0</largeStorage>
+      <multiSelect>0</multiSelect>
+      <name>workingGroup</name>
+      <number>21</number>
+      <picker>1</picker>
+      <prettyName>Working Group</prettyName>
+      <relationalStorage>0</relationalStorage>
+      <separator> </separator>
+      <separators>|, </separators>
+      <size>1</size>
+      <sort/>
+      <unmodifiable>0</unmodifiable>
+      <validationMessage/>
+      <validationRegExp/>
+      <values>aswg=ASWG|galactic=Galactic|cosmicRay=Cosmic Ray|extragalactic=Extragalactic|transient=Transient|dmep=DMEP|interferometry=Interferometry|lst=LST|mst=MST|nectarCAM=NectarCAM|flashCam=FlashCam|sct=SCT|sst=SST</values>
+      <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+    </workingGroup>
   </class>
   <object>
     <name>Presentation.Code.PresentationClass</name>

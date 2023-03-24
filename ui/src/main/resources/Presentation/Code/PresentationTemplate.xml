@@ -1,39 +1,22 @@
-<?xml version="1.1" encoding="UTF-8"?>
-
-<!--
- * See the NOTICE file distributed with this work for additional
- * information regarding copyright ownership.
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
--->
-
-<xwikidoc version="1.4" reference="Presentation.Code.PresentationTemplate" locale="">
+<?xml version='1.1' encoding='UTF-8'?>
+<xwikidoc version="1.5" reference="Presentation.Code.PresentationTemplate" locale="">
   <web>Presentation.Code</web>
   <name>PresentationTemplate</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
-  <creator>xwiki:XWiki.Admin</creator>
+  <creator>xwiki:XWiki.stephenfegan@cta-consortiumorg</creator>
+  <creationDate>1678259883000</creationDate>
   <parent>PresentationClass</parent>
-  <author>xwiki:XWiki.Admin</author>
-  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <version>1.1</version>
+  <author>xwiki:XWiki.stephenfegan@cta-consortiumorg</author>
+  <originalMetadataAuthor>xwiki:XWiki.stephenfegan@cta-consortiumorg</originalMetadataAuthor>
+  <contentAuthor>xwiki:XWiki.stephenfegan@cta-consortiumorg</contentAuthor>
+  <date>1679410004000</date>
+  <contentUpdateDate>1678259883000</contentUpdateDate>
+  <version>19.2</version>
   <title/>
-  <comment/>
-  <minorEdit>false</minorEdit>
+  <comment>Updated class property name</comment>
+  <minorEdit>true</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
   <content/>
@@ -275,12 +258,12 @@
         <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </procApprovalSWG>
       <proceedings>
-        <customDisplay>{{include reference="Presentation.Code.SlidesDisplayer"/}}</customDisplay>
+        <customDisplay/>
         <disabled>0</disabled>
         <hint/>
         <name>proceedings</name>
         <number>18</number>
-        <picker>1</picker>
+        <picker>0</picker>
         <prettyName>Proceedings</prettyName>
         <size>30</size>
         <unmodifiable>0</unmodifiable>
@@ -342,7 +325,7 @@
         <classType>com.xpn.xwiki.objects.classes.UsersClass</classType>
       </reviewers>
       <slides>
-        <customDisplay>{{include reference="Presentation.Code.SlidesDisplayer"/}}</customDisplay>
+        <customDisplay/>
         <disabled>0</disabled>
         <hint/>
         <name>slides</name>
@@ -468,6 +451,31 @@
         <values>invited=Invited talk|talk=Contributed talk|poster=Poster</values>
         <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </type>
+      <workingGroup>
+        <cache>0</cache>
+        <customDisplay/>
+        <defaultValue/>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText/>
+        <hint/>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>workingGroup</name>
+        <number>21</number>
+        <picker>1</picker>
+        <prettyName>Working Group</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <sort/>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <values>aswg=ASWG|galactic=Galactic|cosmicRay=Cosmic Ray|extragalactic=Extragalactic|transient=Transient|dmep=DMEP|interferometry=Interferometry|lst=LST|mst=MST|nectarCAM=NectarCAM|flashCam=FlashCam|sct=SCT|sst=SST</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </workingGroup>
     </class>
     <property>
       <absApprovalSAPO>pending</absApprovalSAPO>

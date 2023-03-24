@@ -40,8 +40,8 @@
 Presentation.Code.PresentationClass_title=Title
 Presentation.Code.PresentationClass_abstract=Abstract
 Presentation.Code.PresentationClass_description=Description
-Presentation.Code.PresentationClass_slides=Slides
-Presentation.Code.PresentationClass_poster=Poster
+Presentation.Code.PresentationClass_slides=Slides (Upload file with button, or enter external URL)
+Presentation.Code.PresentationClass_poster=Poster (Upload file with button, or enter external URL)
 Presentation.Code.PresentationClass_presenters=Authors
 Presentation.Code.PresentationClass_reviewers=Reviewers
 Presentation.Code.PresentationClass_status=Status
@@ -62,7 +62,22 @@ Presentation.Code.PresentationClass_approvalBy_swg=SWG
 Presentation.Code.PresentationClass_hasProceedings=Has proceedings
 Presentation.Code.PresentationClass_proceedingsArxiv=arXiv
 Presentation.Code.PresentationClass_proceedingsDOI=DOI
-Presentation.Code.PresentationClass_proceedings=Proceedings
+Presentation.Code.PresentationClass_proceedings=Proceedings (Upload file with button, or enter external URL)
+
+Presentation.Code.PresentationClass_workingGroup=Working group
+Presentation.Code.PresentationClass_workingGroup_aswg=ASWG
+Presentation.Code.PresentationClass_workingGroup_galactic=Galactic
+Presentation.Code.PresentationClass_workingGroup_cosmicRay=Cosmic Ray
+Presentation.Code.PresentationClass_workingGroup_extragalactic=Extragalactic
+Presentation.Code.PresentationClass_workingGroup_transient=Transient
+Presentation.Code.PresentationClass_workingGroup_dmep=Dark Matter &amp; Exotic Physics
+Presentation.Code.PresentationClass_workingGroup_interferometry=Intensity interferometry
+Presentation.Code.PresentationClass_workingGroup_lst=LST
+Presentation.Code.PresentationClass_workingGroup_mst=MST
+Presentation.Code.PresentationClass_workingGroup_nectarCAM=NectarCAM
+Presentation.Code.PresentationClass_workingGroup_flashCam=FlashCam
+Presentation.Code.PresentationClass_workingGroup_sct=SCT
+Presentation.Code.PresentationClass_workingGroup_sst=SST
 
 Presentation.Code.PresentationClass_absApproval=Abstract approval
 Presentation.Code.PresentationClass_absApprovalSWG=By SWG
