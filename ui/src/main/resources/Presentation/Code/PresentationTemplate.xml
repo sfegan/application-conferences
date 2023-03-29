@@ -86,7 +86,7 @@
       </absApprovalSWG>
       <abstract>
         <contenttype>---</contenttype>
-        <customDisplay/>
+        <customDisplay>{{include reference="Presentation.Code.AbstractDisplayer"/}}</customDisplay>
         <disabled>0</disabled>
         <editor>---</editor>
         <hint/>
@@ -184,7 +184,7 @@
       </hasProceedings>
       <presenters>
         <cache>0</cache>
-        <customDisplay/>
+        <customDisplay>{{include reference="Presentation.Code.UsersDisplayer"/}}</customDisplay>
         <defaultValue/>
         <disabled>0</disabled>
         <displayType>select</displayType>
@@ -301,7 +301,7 @@
       </proceedingsDOI>
       <reviewers>
         <cache>0</cache>
-        <customDisplay/>
+        <customDisplay>{{include reference="Presentation.Code.UsersDisplayer"/}}</customDisplay>
         <defaultValue/>
         <disabled>0</disabled>
         <displayType>select</displayType>
@@ -325,7 +325,7 @@
         <classType>com.xpn.xwiki.objects.classes.UsersClass</classType>
       </reviewers>
       <slides>
-        <customDisplay/>
+        <customDisplay>{{include reference="Presentation.Code.SlidesDisplayer"/}}</customDisplay>
         <disabled>0</disabled>
         <hint/>
         <name>slides</name>
@@ -340,7 +340,7 @@
       </slides>
       <status>
         <cache>0</cache>
-        <customDisplay>{{include reference="Presentation.Code.StatusDisplayer"/}}</customDisplay>
+        <customDisplay/>
         <defaultValue/>
         <disabled>0</disabled>
         <displayType>select</displayType>
@@ -360,7 +360,7 @@
         <unmodifiable>0</unmodifiable>
         <validationMessage/>
         <validationRegExp/>
-        <values>draft=Draft|review=Review|submitted=Submitted|accepted=Accepted|refused=Refused</values>
+        <values>draft=Draft|submitted=Submitted|accepted=Accepted|refused=Refused|withdrawn=Withdrawn</values>
         <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </status>
       <talkApprovalSAPO>
@@ -453,7 +453,7 @@
       </type>
       <workingGroup>
         <cache>0</cache>
-        <customDisplay/>
+        <customDisplay>{{include reference="Presentation.Code.WorkingGroupDisplayer"/}}</customDisplay>
         <defaultValue/>
         <disabled>0</disabled>
         <displayType>select</displayType>
@@ -530,6 +530,9 @@
     </property>
     <property>
       <type/>
+    </property>
+    <property>
+      <workingGroup/>
     </property>
   </object>
 </xwikidoc>
