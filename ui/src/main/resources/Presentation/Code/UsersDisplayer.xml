@@ -36,26 +36,41 @@
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
-  <content>{{velocity}}
-#if ($type == 'edit')
-  {{attachmentSelector className="Presentation.Code.PresentationClass" property="$name" filter="pdf,odp,ppt,pptx"/}}
-#elseif (($type == 'view') &amp;&amp; ($!value!=''))
-  #if($value.endsWith('.pdf'))
-    #if($services.rendering.getMacroDescriptor($services.rendering.resolveMacroId('pdfviewer')))
-      [[attach:$value]]
-      
-      {{pdfviewer file="$value" height=400/}}
-    #elseif ($hasAdmin)
-      [[$services.localization.render('presentation.sheet.slides.pdfViewerMissing')>>XWiki.XWikiPreferences||queryString="section=XWiki.Extensions&amp;search=pdfviewer"]]
-      [[attach:$value]]
-    #else
-      [[attach:$value]]
+  <content>{{include reference="Presentation.Code.Macros"/}}
+
+{{velocity}}
+#if ($doc.FullName == 'Presentation.Code.UsersDisplayer')
+  {{info}}
+    Custom display for users. In view mode, render the users and a button to email them. In edit mode, use the XWiki userPicker.
+  {{/info}}
+  #stop
+#end
+#if ( $type == 'edit' )
+  #set ($userPickerParams = {
+    'id': "${prefix}${name}",
+    'name': "${prefix}${name}",
+    'classname': "$object.getxWikiClass().name",
+    'value': $value
+  })
+  {{html}}
+    #userPicker( true $userPickerParams )
+  {{/html}}
+#elseif($type == 'view' &amp;&amp; $!value != '' )
+  {{html}}
+    ## If statement below filters out requests from LiveTable
+    #if($request.requestURI==$doc.getURL('view') or $doc.getURL('get').startsWith($request.requestURI))
+      #set( $mailSubject = "Presentation - $doc.title" )
+      #set( $mailURL = "#mailtoURL($value, $mailSubject, $doc.externalURL)" )
+      #if( $mailURL )
+        #mailtoAnchor($mailURL)
+      #end
     #end
-  #else
-  {{office attachment="$value"/}}
-  #end
-#elseif ($!value!='')
-  [[attach:$value]]
+    #foreach ( $user in $value.split(',') )
+      #displayUser($user, { "useInlineHTML": true} )
+    #end
+  {{/html}}
+#else
+  $!value
 #end
 {{/velocity}}</content>
 </xwikidoc>
