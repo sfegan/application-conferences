@@ -42,7 +42,7 @@ Presentation.Code.PresentationClass_abstract=Abstract
 Presentation.Code.PresentationClass_description=Description
 Presentation.Code.PresentationClass_slides=Slides (Upload file with button, or enter external URL)
 Presentation.Code.PresentationClass_poster=Poster (Upload file with button, or enter external URL)
-Presentation.Code.PresentationClass_presenters=Authors
+Presentation.Code.PresentationClass_presenters=Contact authors
 Presentation.Code.PresentationClass_reviewers=Reviewers
 Presentation.Code.PresentationClass_status=Status
 Presentation.Code.PresentationClass_status_draft=Draft
@@ -50,6 +50,7 @@ Presentation.Code.PresentationClass_status_review=Review
 Presentation.Code.PresentationClass_status_submitted=Submitted
 Presentation.Code.PresentationClass_status_accepted=Accepted
 Presentation.Code.PresentationClass_status_refused=Refused
+Presentation.Code.PresentationClass_status_withdrawn=Withdrawn
 Presentation.Code.PresentationClass_event=Conference
 Presentation.Code.PresentationClass_type=Presentation type
 Presentation.Code.PresentationClass_type_invited=Invited talk
@@ -89,7 +90,7 @@ Presentation.Code.PresentationClass_absApprovalSAPO_pending=Pending
 Presentation.Code.PresentationClass_absApprovalSAPO_approved=Approved
 Presentation.Code.PresentationClass_absApprovalSAPO_rejected=Rejected
 
-Presentation.Code.PresentationClass_talkApproval=Talk approval
+Presentation.Code.PresentationClass_talkApproval=Slides approval
 Presentation.Code.PresentationClass_posterApproval=Poster approval
 Presentation.Code.PresentationClass_talkApprovalSWG=By SWG
 Presentation.Code.PresentationClass_talkApprovalSWG_pending=Pending
@@ -112,8 +113,8 @@ Presentation.Code.PresentationClass_procApprovalSAPO_rejected=Rejected
 
 # Sheet keys
 presentation.sheet.sapo_header=SAPO &amp; SWG Reviewing
-presentation.sheet.words=words
-presentation.sheet.chars=characters
+presentation.sheet.words=Word count
+presentation.sheet.chars=character count
 presentation.sheet.description=This page controls how Presentation pages are displayed in both view and edit modes.
 presentation.sheet.noObject=The current page doesn't have the expected Presentation object.
 presentation.sheet.noFields=The Presentation application doesn't have any fields to display.
@@ -148,6 +149,9 @@ presentation.livetable.presenters=Presenters
 presentation.livetable.reviewers=Reviewers
 presentation.livetable.status=Status
 presentation.livetable.event=Event
+
+# Keys for Macros
+presentation.macros.description=This page contains macros used in this application.
 
 # Other keys
 presentation.entry.name=Presentation
