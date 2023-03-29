@@ -36,7 +36,9 @@
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
-  <content>{{velocity}}
+  <content>{{include reference="Presentation.Code.Macros"/}}
+
+{{velocity}}
 #set ($object = $doc.getObject('Presentation.Code.PresentationClass'))
 #if (!$object)
   #set ($messageKey = 'presentation.sheet.description')
@@ -52,25 +54,9 @@
 #end
 #set ($discard = $xwiki.jsfx.use('uicomponents/edit/editableProperty.js', {
   'forceSkinAction': true,
-  'language': $xcontext.locale
-}))
+  'language': $xcontext.locale}))
 #set ($discard = $doc.use($object))
 #set ($editing = $xcontext.action == 'edit')
-#macro( renderEditableProperty $property $icon $userCanEdit )
-  &lt;dt #if (!$editing &amp;&amp; $userCanEdit)
-      class="editableProperty"
-      data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference($property)))"
-      data-property-type="object"#end&gt;
-    &lt;label#if ($editing) for="Presentation.Code.PresentationClass_0_$property"#end&gt;
-      $services.icon.render($icon) $escapetool.xml($doc.displayPrettyName($property, false, false))
-    &lt;/label&gt;
-  &lt;/dt&gt;
-  #if($editing &amp;&amp; !$userCanEdit)
-    &lt;dd&gt;$doc.display($property, 'view')&lt;/dd&gt;
-  #else
-    &lt;dd&gt;$doc.display($property)&lt;/dd&gt;
-  #end
-#end
 #macro( renderApproval $property $approval $userCanEdit )
   #set( $iconName = {"pending" : "clock", "approved" : "check", "rejected" : "remove"} )
   #set( $iconSetName = {"pending" : "Font Awesome", "approved" : "Silk", "rejected" : "Silk"} )
@@ -167,122 +153,55 @@ $event.display('bannerMessage','view')
   &lt;div class="row"&gt;
     &lt;div class="col-md-8"&gt;
       &lt;dl&gt;
-        #renderEditableProperty('title', 'font', $hasEdit)
+        #renderEditableProperty($object, 'title', 'font', $hasEdit, false)
       &lt;/dl&gt;
       &lt;div class="row"&gt;
         &lt;div class="col-sm-6"&gt;
           &lt;dl&gt;
-            #renderEditableProperty('status', 'list', $hasEdit)
+            #renderEditableProperty($object, 'status', 'list', $hasEdit, false)
           &lt;/dl&gt;
         &lt;/div&gt;
         &lt;div class="col-sm-6"&gt;
           &lt;dl&gt;
-            #renderEditableProperty('presenters', 'comment', $hasEdit)
-          &lt;/dl&gt;
-        &lt;/div&gt;
-      &lt;/div&gt;
-      &lt;div class="row"&gt;
-        &lt;div class="col-sm-6"&gt;
-          &lt;dl&gt;
-            #renderEditableProperty('type', 'eye', $hasEdit)
-          &lt;/dl&gt;
-        &lt;/div&gt;
-        &lt;div class="col-sm-6"&gt;
-          &lt;dl&gt;
-            #renderEditableProperty('hasProceedings', 'book', $hasEdit)
+            #renderEditableProperty($object, 'presenters', 'comment', $hasEdit, false)
           &lt;/dl&gt;
         &lt;/div&gt;
       &lt;/div&gt;
       &lt;div class="row"&gt;
         &lt;div class="col-sm-6"&gt;
           &lt;dl&gt;
-            #renderEditableProperty('proceedingsArxiv', 'world', $hasEdit)
+            #renderEditableProperty($object, 'type', 'eye', $hasEdit, false)
           &lt;/dl&gt;
         &lt;/div&gt;
         &lt;div class="col-sm-6"&gt;
           &lt;dl&gt;
-           #renderEditableProperty('proceedingsDOI', 'world', $hasEdit)
+            #renderEditableProperty($object, 'hasProceedings', 'book', $hasEdit, false)
+          &lt;/dl&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class="row"&gt;
+        &lt;div class="col-sm-6"&gt;
+          &lt;dl&gt;
+            #renderEditableProperty($object, 'proceedingsArxiv', 'world', $hasEdit, false)
+          &lt;/dl&gt;
+        &lt;/div&gt;
+        &lt;div class="col-sm-6"&gt;
+          &lt;dl&gt;
+           #renderEditableProperty($object, 'proceedingsDOI', 'world', $hasEdit, false)
           &lt;/dl&gt;
         &lt;/div&gt;
       &lt;/div&gt;
       &lt;dl&gt;
-        &lt;dt #if (!$editing &amp;&amp; $hasEdit)
-            class="editableProperty"
-            data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('abstract')))"
-            data-property-type="object"#end&gt;
-          &lt;label#if ($editing) for="Presentation.Code.PresentationClass_0_abstract"#end&gt;
-            $services.icon.render('list') $escapetool.xml($doc.displayPrettyName('abstract', false, false))
-            #if($doc.getValue('abstract').trim() != '')($object.getValue('abstract').trim().split('\W+').size() $escapetool.xml($services.localization.render('presentation.sheet.words')), $object.getValue('abstract').trim().length() $escapetool.xml($services.localization.render('presentation.sheet.chars')))#end
-          &lt;/label&gt;
-        &lt;/dt&gt;
-        &lt;dd&gt;$doc.display('abstract')&lt;/dd&gt;
-        #renderEditableProperty('description', 'list', $hasEdit)
-        &lt;dt #if (!$editing &amp;&amp; $hasEdit)
-            class="editableProperty"
-            data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('slides')))"
-            data-property-type="object"#end&gt;
-          &lt;label#if ($editing) for="Presentation.Code.PresentationClass_0_slides"#end&gt;
-            #set ($materialLabel = 'slides')
-            #if ($object.getValue('type') == "poster")
-              #set ($materialLabel = 'poster')
-            #end
-            $services.icon.render('image') $escapetool.xml($services.localization.render("Presentation.Code.PresentationClass_$materialLabel"))
-          &lt;/label&gt;
-        &lt;/dt&gt;
-        #set($slides_value = $!object.getValue('slides'))
-        #if(!$editing &amp;&amp; $slides_value!='' &amp;&amp; $doc.getAttachment($slides_value))
-          &lt;dd&gt;[[attach:$slides_value]]&lt;/dd&gt;
-        #else
-          &lt;dd&gt;$doc.display('slides')&lt;/dd&gt;
+        #renderEditableProperty($object, 'abstract', 'align-justify', $hasEdit, false)
+        #renderEditableProperty($object, 'description', 'list', $hasEdit, false)
+        #set ($overrideLabel = false)
+        #if ($object.getValue('type') == "poster")
+          #set ($overrideLabel = $escapetool.xml($services.localization.render("Presentation.Code.PresentationClass_poster")))
         #end
-
-        #if(!$editing)
-          {{attachmentSelector className="Presentation.Code.PresentationClass" property="slides" filter="pdf,odp,ppt,pptx" savemode="direct" displayImage="true"/}}
-
-          #if($slides_value!='' &amp;&amp; $doc.getAttachment($slides_value))
-            #if($slides_value.endsWith('.pdf'))
-              {{pdfviewer file="$slides_value" height=400/}}
-
-            #elseif($slides_value.endsWith('.odp') ||
-                    $slides_value.endsWith('.ppt') ||
-                    $slides_value.endsWith('.pptx'))
-              {{office attachment="$slides_value"/}}
-
-            #end
-          #end
-        #end
+        #renderEditableProperty($object, 'slides', 'image', $hasEdit, $overrideLabel)
 
         #if( $object.getValue('hasProceedings')==1 )
-          &lt;dt #if (!$editing &amp;&amp; $hasEdit)
-              class="editableProperty"
-              data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference('proceedings')))"
-              data-property-type="object"#end&gt;
-            &lt;label#if ($editing) for="Presentation.Code.PresentationClass_0_proceedings"#end&gt;
-              $services.icon.render('book')   $escapetool.xml($services.localization.render("Presentation.Code.PresentationClass_proceedings"))
-            &lt;/label&gt;
-          &lt;/dt&gt;
-          #set($proc_value = $!object.getValue('proceedings'))
-          #if(!$editing &amp;&amp; $proc_value!='' &amp;&amp; $doc.getAttachment($proc_value))
-            &lt;dd&gt;[[attach:$proc_value]]&lt;/dd&gt;
-          #else
-            &lt;dd&gt;$doc.display('proceedings')&lt;/dd&gt;
-          #end
-
-          #if(!$editing)
-            {{attachmentSelector className="Presentation.Code.PresentationClass" property="proceedings" filter="pdf,odp,ppt,pptx" savemode="direct" displayImage="true"/}}
-
-            #if($proc_value!='' &amp;&amp; $doc.getAttachment($proc_value))
-              #if($proc_value.endsWith('.pdf'))
-                {{pdfviewer file="$proc_value" height=400/}}
-
-              #elseif($proc_value.endsWith('.odp') ||
-                      $proc_value.endsWith('.ppt') ||
-                      $proc_value.endsWith('.pptx'))
-                {{office attachment="$proc_value"/}}
-
-              #end
-            #end
-          #end
+          #renderEditableProperty($object, 'proceedings', 'book', $hasEdit, $overrideLabel)
         #end
       &lt;/dl&gt;
     &lt;/div&gt;
@@ -290,16 +209,16 @@ $event.display('bannerMessage','view')
     &lt;div style="background-color: cornsilk; border: 2px solid sienna; padding: 10px"&gt;
       &lt;h5&gt;$escapetool.xml($services.localization.render("presentation.sheet.sapo_header"))&lt;/h5&gt;
       &lt;dl style="margin-bottom: 2px"&gt;
-        #renderEditableProperty('reviewers', 'search', $hasEdit)
-        #renderEditableProperty('workingGroup', 'group', $hasEdit)
+        #renderEditableProperty($object, 'reviewers', 'search', $hasEdit, false)
+        #renderEditableProperty($object, 'workingGroup', 'group', $hasEdit, false)
         #set($parentDocument = $xwiki.getDocument($request.get('parent')))
         #if (!$parentDocument.isNew() &amp;&amp; $parentDocument.getObject('Event.Code.EventClass') &amp;&amp; $doc.isNew() &amp;&amp; $editing)
           ## Set-up the document to use the event passed in parent.
           &lt;input type="hidden" name="Presentation.Code.PresentationClass_0_event" value="$!{escapetool.xml($request.get('parent'))}"/&gt;
         #else
-          #renderEditableProperty('event', 'flag', $hasEdit)
+          #renderEditableProperty($object, 'event', 'flag', $hasEdit, false)
         #end
-        #renderEditableProperty('approvalBy', 'check', $hasEdit)
+        #renderEditableProperty($object, 'approvalBy', 'check', $hasEdit, false)
         #renderApproval('absApproval' $object.getValue('approvalBy') $hasEdit)
         #renderApproval('talkApproval' $object.getValue('approvalBy') $hasEdit)
         #if( $editing || $object.getValue('hasProceedings')==1 )
