@@ -37,25 +37,47 @@
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
   <content>{{velocity}}
+#if ($doc.FullName == 'Presentation.Code.SlidesDisplayer')
+  {{info}}
+    Custom display for slides and proceedinfs. In view mode, render the material name, provide an attachment button, and invoke the PDF or Office viewer.
+  {{/info}}
+  #stop
+#end
+## See link below for inspiration
+## https://snippets.xwiki.org/xwiki/bin/view/Extension/User%20Property%20Custom%20Display
+#set ($propertyClass = $object.xWikiClass.get($name))
+#set ($className = $object.xWikiClass.name)
 #if ($type == 'edit')
-  {{attachmentSelector className="Presentation.Code.PresentationClass" property="$name" filter="pdf,odp,ppt,pptx"/}}
-#elseif (($type == 'view') &amp;&amp; ($!value!=''))
-  #if($value.endsWith('.pdf'))
-    #if($services.rendering.getMacroDescriptor($services.rendering.resolveMacroId('pdfviewer')))
-      [[attach:$value]]
-      
-      {{pdfviewer file="$value" height=400/}}
-    #elseif ($hasAdmin)
-      [[$services.localization.render('presentation.sheet.slides.pdfViewerMissing')>>XWiki.XWikiPreferences||queryString="section=XWiki.Extensions&amp;search=pdfviewer"]]
-      [[attach:$value]]
+  {{html clean=false}}
+    $doc.displayEdit($propertyClass, $prefix, $object)
+  {{/html}}
+#else
+  {{html clean=false}}
+    #if($!value!='' &amp;&amp; $doc.getAttachment($value))
+      &lt;a href="$doc.getAttachmentURL($value)"&gt;$value&lt;/a&gt;
+##    #elseif($!value!='' &amp;&amp; $urltool.toURL($value))
+##      &lt;span class="wikiexternallink"&gt;&lt;a href="$value"&gt;$value&lt;/a&gt;&lt;/span&gt;
     #else
-      [[attach:$value]]
+      #set($value_dom = $services.rendering.parse($value, "xwiki/2.1"))
+      #set($value_html = $services.rendering.render($value_dom, "xhtml/1.0"))
+      $value_html
+##      $doc.displayView($propertyClass, $prefix, $object)
     #end
-  #else
-  {{office attachment="$value"/}}
+  {{/html}}
+
+  {{attachmentSelector className="$className" property="$name" filter="pdf,odp,ppt,pptx" savemode="direct" displayImage="true"/}}
+
+  #if($!value!='' &amp;&amp; $doc.getAttachment($value))
+    #if($value.endsWith('.pdf'))
+      {{pdfviewer file="$value" height=400/}}
+
+    #elseif($value.endsWith('.odp') ||
+            $value.endsWith('.ppt') ||
+            $slides_value.endsWith('.pptx'))
+      {{office attachment="$slides_value"/}}
+
+    #end
   #end
-#elseif ($!value!='')
-  [[attach:$value]]
 #end
 {{/velocity}}</content>
 </xwikidoc>
