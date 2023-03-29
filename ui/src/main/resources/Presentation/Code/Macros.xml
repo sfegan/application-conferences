@@ -37,25 +37,77 @@
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
   <content>{{velocity}}
-#if ($type == 'edit')
-  {{attachmentSelector className="Presentation.Code.PresentationClass" property="$name" filter="pdf,odp,ppt,pptx"/}}
-#elseif (($type == 'view') &amp;&amp; ($!value!=''))
-  #if($value.endsWith('.pdf'))
-    #if($services.rendering.getMacroDescriptor($services.rendering.resolveMacroId('pdfviewer')))
-      [[attach:$value]]
-      
-      {{pdfviewer file="$value" height=400/}}
-    #elseif ($hasAdmin)
-      [[$services.localization.render('presentation.sheet.slides.pdfViewerMissing')>>XWiki.XWikiPreferences||queryString="section=XWiki.Extensions&amp;search=pdfviewer"]]
-      [[attach:$value]]
+#if ($doc.FullName == 'Presentation.Code.Macros')
+  #set ($messageKey = 'presentation.macros.description')
+  #set ($messageType = 'info')
+  {{$messageType}}
+  $services.localization.render($messageKey)
+  {{/$messageType}}
+  #stop
+#end
+#macro( renderEditableProperty $object $property $icon $userCanEdit $overrideLabel )
+  &lt;dt #if ($xcontext.action != 'edit' &amp;&amp; $userCanEdit)
+      class="editableProperty"
+      data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference($property)))"
+      data-property-type="object"#end&gt;
+    &lt;label#if ($xcontext.action == 'edit') for="${object.xWikiClass.name}_0_$property"#end&gt;
+    #if ($overrideLabel)
+      $services.icon.render($icon) ${overrideLabel}
     #else
-      [[attach:$value]]
+      $services.icon.render($icon) $escapetool.xml($doc.displayPrettyName($property, false, false))
     #end
+    &lt;/label&gt;
+  &lt;/dt&gt;
+  #if($xcontext.action == 'edit' &amp;&amp; !$userCanEdit)
+    &lt;dd&gt;$doc.display($property, 'view')&lt;/dd&gt;
   #else
-  {{office attachment="$value"/}}
+    &lt;dd&gt;$doc.display($property)&lt;/dd&gt;
   #end
-#elseif ($!value!='')
-  [[attach:$value]]
+#end
+#macro( mailtoURL $userlist $subject $docurl )
+  #if ( $userlist )
+    #set ( $email_addresses = {} )
+    #set ( $email_names = {} )
+    #set ( $missing_emails = [] )
+    #if ( $userlist.class.name == "java.lang.String" )
+      #set ( $userlist = $userlist.split(",") )
+    #end
+    #foreach ( $userref in $userlist )
+      #if ( $userref.class.name == "org.xwiki.model.reference.DocumentReference" )
+        #set ( $userref = $userref.name )
+      #end
+      #set ( $user = $services.user.getProperties($userref) )
+      #set ( $first_name = "${user.FirstName.substring(0,1).toUpperCase()}${user.FirstName.substring(1)}" )
+      #set ( $last_name = "${user.LastName.substring(0,1).toUpperCase()}${user.LastName.substring(1)}" )
+      #if ( $user.Email )
+        #set ( $discard = $email_addresses.put($user.Email, true) )
+        #set ( $discard = $email_names.put($first_name, true) )
+      #else
+        #set ( $discard = $missing_emails.add("$first_name $last_name") )
+      #end
+    #end
+    #if ( !$email_addresses.empty )
+      #if( $email_names.size() &gt; 5 )
+        #set( $mailto_body = "Dear all,$util.newline$util.newline" )
+      #elseif( $email_names.size() &gt; 2 )
+        #set( $last_name = $email_names.size() - 1 )
+        #set( $email_names_keyset = [] )
+        #set( $discard = $email_names_keyset.addAll($email_names.keySet()) )
+        #set( $mailto_body = "Dear $stringtool.join($email_names_keyset,', ',0,$last_name) and $email_names_keyset.get($last_name),$util.newline$util.newline" )
+      #else
+        #set( $mailto_body = "Dear $stringtool.join($email_names.keySet(),' and '),$util.newline$util.newline" )
+      #end
+      #if ( $docurl )
+        #set( $mailto_body = "${mailto_body}URL: $docurl" )
+      #end
+    #end
+    #set( $mailto_url = "mailto:$escapetool.url($stringtool.join($email_addresses.keySet(),','))" )
+    #set( $mailto_url = "$mailto_url?subject=$escapetool.url($subject)&amp;body=$escapetool.url($mailto_body)")
+    $mailto_url
+  #end
+#end
+#macro( mailtoAnchor $mailURL )
+  &lt;a href="$mailURL" target="_blank" class="btn btn-primary" style="width:36px; line-height:17px; height:20px; padding:0; padding-left:1px; margin:0; margin-top:-4px; margin-right:4px; color=white;"&gt;$services.icon.renderHTML('envelope')&lt;/a&gt;
 #end
 {{/velocity}}</content>
 </xwikidoc>
