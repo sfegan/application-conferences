@@ -61,9 +61,7 @@
     #if($request.requestURI==$doc.getURL('view') or $doc.getURL('get').startsWith($request.requestURI))
       #set( $mailSubject = "Presentation - $doc.title" )
       #set( $mailURL = "#mailtoURL($value, $mailSubject, $doc.externalURL)" )
-      #if( $mailURL )
-        #mailtoAnchor($mailURL)
-      #end
+      #mailtoAnchor($mailURL)
     #end
     #foreach ( $user in $value.split(',') )
       #displayUser($user, { "useInlineHTML": true} )
