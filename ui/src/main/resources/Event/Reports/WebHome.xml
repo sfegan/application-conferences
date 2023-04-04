@@ -20,8 +20,8 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.4" reference="Event.Code.WebHome" locale="">
-  <web>Event.Code</web>
+<xwikidoc version="1.4" reference="Event.Reports.WebHome" locale="">
+  <web>Event.Reports</web>
   <name>WebHome</name>
   <language/>
   <defaultLanguage/>
@@ -31,23 +31,18 @@
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
-  <title>$services.localization.render('appWithinMinutes.codeSpace.title')</title>
+  <title>Reports</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
-  <hidden>true</hidden>
-  <content>{{translation key="appWithinMinutes.codeSpace.description" /}}
-
-{{velocity}}
-#if ("$xwiki.getUserPreference('displayHiddenDocuments')" != '1')
-  {{info}}
-    {{translation key="appWithinMinutes.codeSpace.hiddenPagesInfo" /}}
-  {{/info}}
-#end
-
-#set ($escapedDocumentReference = $services.rendering.escape($services.model.serialize($doc.documentReference,
-  'default'), 'xwiki/2.1'))
-{{documentTree showTranslations="false" showAttachments="false"
-  filterHiddenDocuments="false" root="document:$escapedDocumentReference" /}}
+  <hidden>false</hidden>
+  <content>{{velocity}}
+{{html wiki="true"}}
+  &lt;ul&gt;
+    &lt;li&gt;[[Number of presentations per year]]&lt;/li&gt;
+    &lt;li&gt;[[My presentations]]&lt;/li&gt;
+    &lt;li&gt;&lt;a href="$xwiki.getDocument('Event.Reports.My presentations').getURL()?role=reviewer"&gt;My reviews&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+{{/html}}
 {{/velocity}}</content>
 </xwikidoc>

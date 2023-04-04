@@ -21,33 +21,170 @@
 -->
 
 <xwikidoc version="1.4" reference="Event.Code.WebHome" locale="">
-  <web>Event.Code</web>
-  <name>WebHome</name>
+  <web>Event.Reports</web>
+  <name>My presentations</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <parent>Event.WebHome</parent>
+  <parent>Event.Reports.WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
-  <title>$services.localization.render('appWithinMinutes.codeSpace.title')</title>
+  <title>My presentations</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
-  <hidden>true</hidden>
-  <content>{{translation key="appWithinMinutes.codeSpace.description" /}}
+  <hidden>false</hidden>
+  <content>{{include reference="Presentation.Code.Macros"/}}
 
 {{velocity}}
-#if ("$xwiki.getUserPreference('displayHiddenDocuments')" != '1')
-  {{info}}
-    {{translation key="appWithinMinutes.codeSpace.hiddenPagesInfo" /}}
-  {{/info}}
-#end
+{{html}}
+  #set( $user = $xcontext.getRequest().getParameter('user') )
+  #set( $role = $xcontext.getRequest().getParameter('role') )
+  #set( $render_form = true )
+  #if( "$!user" == "" )
+    #set ( $user = $xcontext.localUser.toString() )
+  #end
+  #if( "$!role" != 'reviewer' )
+    #set ( $role = 'presenter' )
+  #end
 
-#set ($escapedDocumentReference = $services.rendering.escape($services.model.serialize($doc.documentReference,
-  'default'), 'xwiki/2.1'))
-{{documentTree showTranslations="false" showAttachments="false"
-  filterHiddenDocuments="false" root="document:$escapedDocumentReference" /}}
+  #if( $render_form )
+    &lt;form action="$doc.getURL("view")" method="get"&gt;
+      &lt;div class="xform"&gt;
+        &lt;div class="row"&gt;
+          &lt;div class="col-md-8"&gt;
+            &lt;dl&gt;
+              &lt;dt&gt;User ID&lt;/dt&gt;
+              &lt;dd&gt;
+                &lt;input type="text" name="user" id="user-select" onchange="this.form.submit()" value="$escapetool.xml($user)" /&gt;
+              &lt;/dd&gt;
+            &lt;/dl&gt;
+          &lt;/div&gt;
+          &lt;div class="col-md-4"&gt;
+            &lt;dl&gt;
+              &lt;dt&gt;Role&lt;/dt&gt;
+              &lt;dd&gt;
+                &lt;select name="role" id="role-select" onchange="this.form.submit()"&gt;
+                  &lt;option value="presenter" #if($role=="presenter")selected#{end}&gt;Presenter&lt;/option&gt;
+                  &lt;option value="reviewer" #if($role=="reviewer")selected#end&gt;Reviewer&lt;/option&gt;
+                &lt;/select&gt;
+              &lt;/dd&gt;
+            &lt;/dl&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/form&gt;
+  #end
+
+  &lt;h5 style="margin-top: 0"&gt;List of presentations as #if( $role== "reviewer")Reviewer#{else}Presenter#end&lt;/h5&gt;
+
+  #set( $query = "FROM doc.object(Presentation.Code.PresentationClass) as presentation WHERE presentation.${role}s like :user" )
+  #set( $presentationDocRefList = $services.query.xwql($query).bindValue("user","%${user}%").execute() )
+
+  #if ( $presentationDocRefList.isEmpty() )
+    &lt;p&gt;No presentations found&lt;/p&gt;
+  #else
+    #set( $presentationMap = {} )
+    #set( $eventMap = {} )
+    #foreach( $presentationDocRef in $presentationDocRefList )
+      #set( $presentationDoc = $xwiki.getDocument($presentationDocRef) )
+      #set( $presentation = $presentationDoc.getObject('Presentation.Code.PresentationClass') )
+      #set( $eventRef = $presentation.getValue('event') )
+      #if( !$eventMap.containsKey($eventRef) )
+        #set( $eventDoc = $xwiki.getDocument($eventRef) )
+        #set( $event = $eventDoc.getObject('Event.Code.EventClass') )
+        #set( $discard = $eventMap.put($eventRef, { 'obj': $event, 'doc': $eventDoc }) )
+      #end
+      #set( $startDate = $datetool.format('yyyy-MM-dd',$eventMap[$eventRef]['obj'].getValue('startDate')) )
+      #set( $presentationKey = "${startDate}:${presentationDocRef.toString()}" )
+      #set( $discard = $presentationMap.put($presentationKey,{ 'obj': $presentation, 'doc': $presentationDoc }) )
+    #end
+    &lt;table class="table table-striped"&gt;
+      &lt;thead&gt;
+        &lt;tr style="border: none"&gt;
+          &lt;th rowspan=2 colspan=3&gt;Presentation&lt;/th&gt;
+          &lt;th rowspan=2 colspan=2&gt;Conference&lt;/th&gt;
+          #if($role=="presenter")
+            &lt;th colspan=2 rowspan=2&gt;Reviewers&lt;/th&gt;
+          #else
+            &lt;th colspan=2 rowspan=2&gt;Authors&lt;/th&gt;
+          #end
+          &lt;th colspan=3 style="border: none"&gt;Uploaded&lt;/th&gt;
+          &lt;th colspan=7 style="border: none"&gt;Approvals&lt;/th&gt;
+        &lt;/tr&gt;
+        &lt;tr style="border: none"&gt;
+          &lt;th style="border-top: none"&gt;$services.icon.renderHTML('align-justify')&lt;/th&gt;
+          &lt;th style="border-top: none"&gt;$services.icon.renderHTML('image')&lt;/th&gt;
+          &lt;th style="border-top: none"&gt;$services.icon.renderHTML('book')&lt;/th&gt;
+          &lt;th style="border-top: none"&gt;By&lt;/th&gt;
+          &lt;th colspan=2 style="border-top: none"&gt;$services.icon.renderHTML('align-justify')&lt;/th&gt;
+          &lt;th colspan=2 style="border-top: none"&gt;$services.icon.renderHTML('image')&lt;/th&gt;
+          &lt;th colspan=2 style="border-top: none"&gt;$services.icon.renderHTML('book')&lt;/th&gt;
+        &lt;/tr&gt;
+      &lt;/thead&gt;
+      &lt;tbody&gt;
+        #set( $abstractModals = {} )
+        #set( $presentationKeys = [] )
+        #set( $discard = $presentationKeys.addAll($presentationMap.keySet()) )
+        #set( $discard = $collectiontool.sortModifiable($presentationKeys) )
+        #set( $discard = $collectiontool.reverseModifiable($presentationKeys) )
+        #foreach( $k in $presentationKeys )
+          #set( $presentation = $presentationMap[$k]['obj'] )
+          #set( $presentationDoc = $presentationMap[$k]['doc'] )
+          #set( $event = $eventMap[$presentation.getValue('event')]['obj'] )
+          #set( $eventDoc = $eventMap[$presentation.getValue('event')]['doc'] )
+          &lt;tr&gt;
+            #if($presentation.getValue('status') == "withdrawn" or $presentation.getValue('status') == "refused")
+              &lt;td&gt;&lt;a href="$presentationDoc.URL"&gt;&lt;s&gt;$services.xml.escape($presentationDoc.title)&lt;/s&gt;&lt;/a&gt;&lt;/td&gt;
+            #else
+              &lt;td&gt;&lt;a href="$presentationDoc.URL"&gt;$services.xml.escape($presentationDoc.title)&lt;/a&gt;&lt;/td&gt;
+            #end
+            &lt;td&gt;#presentationTypeIcon($presentation.getValue('type'))&lt;/td&gt;
+            &lt;td&gt;#presentationStatusIcon($presentation.getValue('status'))&lt;/td&gt;
+            &lt;td&gt;&lt;a href="$eventDoc.URL"&gt;$services.xml.escape($eventDoc.title)&lt;/a&gt;&lt;/td&gt;
+            #if($event.getValue('conferenceURL') &amp;&amp; $urltool.toURL($event.getValue('conferenceURL')))
+              &lt;td&gt;&lt;a href="$event.getValue('conferenceURL')"&gt;$services.icon.renderHTML('link')&lt;/a&gt;&lt;/td&gt;
+            #else
+              &lt;td/&gt;
+            #end
+            #if($role=="presenter" and "$!presentation.getValue('reviewers')"!='')
+              &lt;td&gt;#displayUser($presentation.getValue('reviewers'), { "useInlineHTML": true} )&lt;/td&gt;
+              #set( $mailSubject = "Presentation - $presentationDoc.title" )
+              #set( $mailURL = "#mailtoURL($presentation.getValue('reviewers'), $mailSubject, $presentationDoc.externalURL)" )
+              &lt;td&gt;#mailtoAnchor($mailURL)&lt;/td&gt;
+            #elseif($role!="presenter" and "$!presentation.getValue('presenters')"!='')
+              &lt;td&gt;#displayUser($presentation.getValue('presenters'), { "useInlineHTML": true} )&lt;/td&gt;
+              #set( $mailSubject = "Presentation - $presentationDoc.title" )
+              #set( $mailURL = "#mailtoURL($presentation.getValue('presenters'), $mailSubject, $presentationDoc.externalURL)" )
+              &lt;td&gt;#mailtoAnchor($mailURL)&lt;/td&gt;
+            #else
+              &lt;td/&gt;
+              &lt;td/&gt;
+            #end
+            &lt;td&gt;#renderAbstractLinkedIcon($presentation, $presentationDoc, $abstractModals)&lt;/td&gt;
+            &lt;td&gt;#renderSlidesOrProceedingsLinkedIcon($presentation, $presentationDoc, 'slides')&lt;/td&gt;
+            &lt;td&gt;#renderSlidesOrProceedingsLinkedIcon($presentation, $presentationDoc, 'proceedings')&lt;/td&gt;
+            &lt;td&gt;#renderApprovalsBy($presentation.getValue('approvalBy'))&lt;/td&gt;
+            #renderTwoColumnApprovals($presentation "absApproval")
+            #renderTwoColumnApprovals($presentation "talkApproval")
+            #if( $!presentation.getValue('hasProceedings')==1 or "$presentation.getValue('proceedings')" != "")
+              #renderTwoColumnApprovals($presentation "procApproval")
+            #else
+              &lt;td/&gt;
+              &lt;td/&gt;
+            #end
+          &lt;/tr&gt;
+        #end
+      &lt;/tbody&gt;
+    &lt;/table&gt;
+
+    #renderAbstractModals($abstractModals)
+
+    #renderPresentationKey
+
+  #end
+{{/html}}
 {{/velocity}}</content>
 </xwikidoc>
