@@ -64,28 +64,44 @@
     &lt;dd&gt;$doc.display($property)&lt;/dd&gt;
   #end
 #end
+#macro( getGroupMembersAsString $group )
+  #set( $users = $services.user.group.getMembers($group).toArray() )
+  #set( $userStringList = [] )
+  #foreach ( $userref in $users )
+    #set ( $discard = $userStringList.add($userref.toString()) )
+  #end
+  $stringtool.join($userStringList,",")##
+#end
 #macro( mailtoURL $userlist $subject $docurl )
+  #if ( $userlist and $userlist.class.name == "java.lang.String" )
+    #if( $userlist != "")
+      #set ( $userlist = $userlist.split(",") )
+    #else
+      #set ( $userlist = [] )
+    #end
+  #end
   #if ( $userlist )
     #set ( $email_addresses = {} )
     #set ( $email_names = {} )
-    #set ( $missing_emails = [] )
-    #if ( $userlist.class.name == "java.lang.String" )
-      #set ( $userlist = $userlist.split(",") )
-    #end
+    #set ( $missing_emails = {} )
     #foreach ( $userref in $userlist )
       #if ( $userref.class.name == "org.xwiki.model.reference.DocumentReference" )
-        #set ( $userref = $userref.name )
+        #set ( $userref = $userref.toString() )
       #end
-      #if( $services.user.exists($userref) )
+      #if( $userref and "$!userref" != "" and $services.user.exists($userref) )
         #set ( $user = $services.user.getProperties($userref) )
         #set ( $first_name = "${user.FirstName.substring(0,1).toUpperCase()}${user.FirstName.substring(1)}" )
         #set ( $last_name = "${user.LastName.substring(0,1).toUpperCase()}${user.LastName.substring(1)}" )
         #if ( $user.Email )
           #set ( $discard = $email_addresses.put($user.Email, true) )
           #set ( $discard = $email_names.put($first_name, true) )
+        #elseif ( $first_name != "" and $last_name != "" )
+          #set ( $discard = $missing_emails.put("$first_name $last_name ($userref)", true) )
         #else
-          #set ( $discard = $missing_emails.add("$first_name $last_name") )
+          #set ( $discard = $missing_emails.put($userref, true) )
         #end
+      #elseif( $userref and "$!userref" != "" )
+        #set ( $discard = $missing_emails.put($userref, true) )
       #end
     #end
     #if ( !$email_addresses.isEmpty() )
@@ -102,15 +118,22 @@
       #if ( $docurl )
         #set( $mailto_body = "${mailto_body}URL: $docurl" )
       #end
+      #if( !$missing_emails.isEmpty() )
+        #set( $missing_emails = $stringtool.join($missing_emails.keySet(), ', ') )
+        #set( $mailto_body = "${mailto_body}${util.newline}Missing emails: $missing_emails" )
+      #end
       #set( $mailto_url = "mailto:$escapetool.url($stringtool.join($email_addresses.keySet(),','))" )
       #set( $mailto_url = "$mailto_url?subject=$escapetool.url($subject)&amp;body=$escapetool.url($mailto_body)")
       $mailto_url
     #end
   #end
 #end
+#macro( renderMailToButton $href $target )
+  &lt;a #if("$!href"!="")href="$href"#end #if("$!target"!="")target="$target"#end class="btn btn-primary" style="width:36px; line-height:17px; height:20px; padding:0; margin:0; margin-top:-4px; color=white;"&gt;$services.icon.renderHTML('envelope')&lt;/a&gt;
+#end
 #macro( mailtoAnchor $mailURL )
-  #if( $!mailtoURL != "" )
-    &lt;a href="$mailURL" target="_blank" class="btn btn-primary" style="width:36px; line-height:17px; height:20px; padding:0; padding-left:1px; margin:0; margin-top:-4px; margin-right:4px; color=white;"&gt;$services.icon.renderHTML('envelope')&lt;/a&gt;
+  #if( "$!mailURL" != "" )
+    #renderMailToButton($mailURL, "_blank")
   #end
 #end
 #macro( presentationTypeIcon $type )
@@ -179,7 +202,7 @@
 #end
 #macro( renderApprovalsBy $whom )
   #if( $whom == "swg" )
-    SWG
+    WG
   #elseif( $whom == "sapo" )
     SAPO
   #elseif( $whom == "both" )
@@ -200,11 +223,25 @@
   #set( $style = "$basestyle $colorstyle" )
   $style
 #end
+#macro( approvalStatus $presentation $approvalSet )
+  #if( $presentation.getValue('approvalBy') != "sapo" )
+    #set( $approval = ${presentation.getValue("${approvalSet}ApprovalSWG")|"pending"} )
+  #else
+    #set( $approval = "approved" )
+  #end
+  #if( $presentation.getValue('approvalBy') != "swg" )
+    #set( $approved_value = ${presentation.getValue("${approvalSet}ApprovalSAPO")|"pending"} )
+    #if( $approval == "approved" || ( $approval == "pending" &amp;&amp; $approved_value == "rejected" ) )
+      #set( $approval = $approved_value )
+    #end
+  #end
+  $approval##
+#end
 #macro( renderTwoColumnApprovals $presentation $approvalSet )
   #set( $approvalIconName = {"pending" : "shape_square", "approved" : "thumb_up", "rejected" : "thumb_down"} )
   #set( $swg_html = "" )
   #if($presentation.getValue('approvalBy') != "sapo")
-    #set( $approved_value = ${presentation.getValue("${approvalSet}SWG")|"pending"} )
+    #set( $approved_value = ${presentation.getValue("${approvalSet}ApprovalSWG")|"pending"} )
     #set( $approval = $approved_value )
     #set( $swg_html = "#presentationApprovalIcon($approved_value)" )
   #else
@@ -212,7 +249,7 @@
   #end
   #set( $sapo_html = "" )
   #if($presentation.getValue('approvalBy') != "swg")
-    #set( $approved_value = ${presentation.getValue("${approvalSet}SAPO")|"pending"} )
+    #set( $approved_value = ${presentation.getValue("${approvalSet}ApprovalSAPO")|"pending"} )
     #if($approval == "approved" || ( $approval == "pending" &amp;&amp; $approved_value == "rejected"))
       #set($approval = $approved_value)
     #end
@@ -307,6 +344,69 @@
         &lt;/tbody&gt;
       &lt;/table&gt;
     &lt;/div&gt;
+  &lt;/div&gt;
+#end
+#macro( renderConferenceYearSelectorForm $title $selectedYear $lastYear $firstYear )
+  #if( !$firstYear )
+    #set( $firstYear = 2008 )
+  #end
+  #if( !$lastYear )
+    #set($lastYear = $xwiki.getDocument($services.query.xwql("FROM doc.object(Event.Code.EventClass) AS evt ORDER BY evt.startDate desc").setLimit(1).execute()).getObject("Event.Code.EventClass").getValue('startDate').year + 1900)
+  #end
+  #if( !$lastYear )
+    #set( $lastYear = $datetool.year )
+  #end
+  &lt;form action="$doc.getURL("view")" method="get"&gt;
+    &lt;div class="xform"&gt;
+      &lt;div class="row"&gt;
+        &lt;div class="col-md-12"&gt;
+          &lt;dl&gt;
+            &lt;dt&gt;$title&lt;/dt&gt;
+            &lt;dd&gt;
+              &lt;select name="year" id="year-select" onchange="this.form.submit()"&gt;
+                &lt;option value=""&gt;--- All upcoming conferences ---&lt;/option&gt;
+                #foreach( $year in [$lastYear..$firstYear] )
+                  #set( $selected = "" )
+                  #if ( "$year" == "$selectedYear" )
+                    #set( $selected = 'selected' )
+                  #end
+                  &lt;option value="$year" $selected&gt;$year&lt;/option&gt;
+                #end
+              &lt;/select&gt;
+            &lt;/dd&gt;
+          &lt;/dl&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/form&gt;
+#end
+#macro( displayUserOrBlank $user )
+  #if("$!user" != "")#displayUser($user, { "useInlineHTML": true} )#end
+#end
+#macro( renderCreateConferenceBox )
+  &lt;div style="background-color: powderblue; border: 2px solid navy; padding: 10px; margin-bottom: 10px"&gt;
+    &lt;h5 style="margin-top: 2px"&gt;$escapetool.xml($services.localization.render('event.createEvent.section_title'))&lt;/h5&gt;
+    &lt;form action="$xwiki.getDocument('Main.WebHome').getURL('create')" class="xform" method="post"&gt;
+      #set($discard = $xwiki.jsfx.use('js/xwiki/create.js', {'forceSkinAction': true}))
+      #set($escapedSpaceReference = $escapetool.xml($doc.Space))
+      &lt;input type="hidden" name="spaceReference" value="Event" /&gt;
+      &lt;input type="hidden" name="template" value="Event.Code.EventTemplate" /&gt;
+      ## We use the event field to transfer the name of the event on which this new presentation should be linked to
+      &lt;div&gt;
+        &lt;dl&gt;
+          &lt;dt&gt;
+            &lt;label for="targetTitle"&gt;$escapetool.xml($services.localization.render('event.createEvent.title'))&lt;/label&gt;
+            &lt;span class="xHint"&gt;$escapetool.xml($services.localization.render('event.createEvent.title.hint'))&lt;/span&gt;
+          &lt;/dt&gt;
+          &lt;dd&gt;
+            &lt;input type="text" id="targetTitle" name="name" value="" placeholder="$escapetool.xml($services.localization.render('event.createEvent.title.placeholder')) $datetool.year" /&gt;
+          &lt;/dd&gt;
+        &lt;/dl&gt;
+        &lt;span class="buttonwrapper"&gt;
+          &lt;input class="button" type="submit" value="$escapetool.xml($services.localization.render('event.createEvent.create'))"/&gt;
+        &lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/form&gt;
   &lt;/div&gt;
 #end
 {{/velocity}}</content>
