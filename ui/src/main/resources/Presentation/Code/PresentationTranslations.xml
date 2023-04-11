@@ -39,7 +39,7 @@
   <content># Class fields
 Presentation.Code.PresentationClass_title=Title
 Presentation.Code.PresentationClass_abstract=Abstract
-Presentation.Code.PresentationClass_description=Description
+Presentation.Code.PresentationClass_description=Discussion
 Presentation.Code.PresentationClass_slides=Slides (Upload file with button, or enter external URL)
 Presentation.Code.PresentationClass_poster=Poster (Upload file with button, or enter external URL)
 Presentation.Code.PresentationClass_presenters=Contact authors
@@ -57,9 +57,9 @@ Presentation.Code.PresentationClass_type_invited=Invited talk
 Presentation.Code.PresentationClass_type_talk=Contributed talk
 Presentation.Code.PresentationClass_type_poster=Poster
 Presentation.Code.PresentationClass_approvalBy=Approvals required
-Presentation.Code.PresentationClass_approvalBy_both=SWG &amp; SAPO
+Presentation.Code.PresentationClass_approvalBy_both=WG &amp; SAPO
 Presentation.Code.PresentationClass_approvalBy_sapo=SAPO
-Presentation.Code.PresentationClass_approvalBy_swg=SWG
+Presentation.Code.PresentationClass_approvalBy_swg=WG
 Presentation.Code.PresentationClass_hasProceedings=Has proceedings
 Presentation.Code.PresentationClass_proceedingsArxiv=arXiv
 Presentation.Code.PresentationClass_proceedingsDOI=DOI
@@ -81,7 +81,7 @@ Presentation.Code.PresentationClass_workingGroup_sct=SCT
 Presentation.Code.PresentationClass_workingGroup_sst=SST
 
 Presentation.Code.PresentationClass_absApproval=Abstract approval
-Presentation.Code.PresentationClass_absApprovalSWG=By SWG
+Presentation.Code.PresentationClass_absApprovalSWG=By WG
 Presentation.Code.PresentationClass_absApprovalSWG_pending=Pending
 Presentation.Code.PresentationClass_absApprovalSWG_approved=Approved
 Presentation.Code.PresentationClass_absApprovalSWG_rejected=Rejected
@@ -92,7 +92,7 @@ Presentation.Code.PresentationClass_absApprovalSAPO_rejected=Rejected
 
 Presentation.Code.PresentationClass_talkApproval=Slides approval
 Presentation.Code.PresentationClass_posterApproval=Poster approval
-Presentation.Code.PresentationClass_talkApprovalSWG=By SWG
+Presentation.Code.PresentationClass_talkApprovalSWG=By WG
 Presentation.Code.PresentationClass_talkApprovalSWG_pending=Pending
 Presentation.Code.PresentationClass_talkApprovalSWG_approved=Approved
 Presentation.Code.PresentationClass_talkApprovalSWG_rejected=Rejected
@@ -102,7 +102,7 @@ Presentation.Code.PresentationClass_talkApprovalSAPO_approved=Approved
 Presentation.Code.PresentationClass_talkApprovalSAPO_rejected=Rejected
 
 Presentation.Code.PresentationClass_procApproval=Proceedings approval
-Presentation.Code.PresentationClass_procApprovalSWG=By SWG
+Presentation.Code.PresentationClass_procApprovalSWG=By WG
 Presentation.Code.PresentationClass_procApprovalSWG_pending=Pending
 Presentation.Code.PresentationClass_procApprovalSWG_approved=Approved
 Presentation.Code.PresentationClass_procApprovalSWG_rejected=Rejected
@@ -112,7 +112,7 @@ Presentation.Code.PresentationClass_procApprovalSAPO_approved=Approved
 Presentation.Code.PresentationClass_procApprovalSAPO_rejected=Rejected
 
 # Sheet keys
-presentation.sheet.sapo_header=SAPO &amp; SWG Reviewing
+presentation.sheet.sapo_header=SAPO &amp; WG Reviewing
 presentation.sheet.words=Word count
 presentation.sheet.chars=character count
 presentation.sheet.description=This page controls how Presentation pages are displayed in both view and edit modes.
