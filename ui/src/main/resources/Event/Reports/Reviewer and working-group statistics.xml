@@ -22,7 +22,7 @@
 
 <xwikidoc version="1.4" reference="Event.Reports.WebHome" locale="">
   <web>Event.Reports</web>
-  <name>WebHome</name>
+  <name>Reviewer and working-group statistics</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
@@ -31,18 +31,92 @@
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
-  <title>Reports</title>
+  <title>Reviewer and working-group statistics</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>false</hidden>
   <content>{{velocity}}
-{{html wiki="true"}}
-  &lt;ul&gt;
-    &lt;li&gt;[[Number of presentations per year]]&lt;/li&gt;
-    &lt;li&gt;[[My presentations]]&lt;/li&gt;
-    &lt;li&gt;&lt;a href="$xwiki.getDocument('Event.Reports.My presentations').getURL()?role=reviewer"&gt;My reviews&lt;/a&gt;&lt;/li&gt;
-  &lt;/ul&gt;
-{{/html}}
+  #set( $query = "FROM doc.object(Event.Code.EventClass) AS evt WHERE evt.startDate&gt;=:sdate ORDER BY evt.startDate DESC" )
+  #set( $currentYear = $datetool.date.year + 1900 )
+  #set( $startYear = $currentYear - 5 )
+  #set( $startDate = $datetool.toDate('yyyy-MM-dd',"${startYear}-01-01") )
+  #set( $eventDocRefList = $services.query.xwql($query).bindValue('sdate',$startDate).execute() )
+  #set( $reviewerCount = {} )
+  #set( $reviewerList = [] )
+  #set( $swgCount = {} )
+
+  #set( $startYear = $currentYear + 1000 )
+  #set( $query = 'FROM doc.object(Presentation.Code.PresentationClass) as presentation WHERE presentation.event = :event' )
+  #foreach( $eventDocRef in $eventDocRefList )
+    #if( $eventDocRef != 'Event.Code.EventTemplate' )
+      #set( $eventDoc = $xwiki.getDocument($eventDocRef) )
+      #set( $event = $eventDoc.getObject("Event.Code.EventClass") )
+      #set( $eventYear = $event.getValue('startDate').year + 1900 )
+      #foreach( $presentationDocRef in $services.query.xwql($query).bindValue('event',$eventDoc.fullName).execute() )
+        #set( $presentationDoc = $xwiki.getDocument($presentationDocRef) )
+        #set( $presentation = $presentationDoc.getObject("Presentation.Code.PresentationClass"))
+        #if( "$!presentation.getValue('reviewers')" != "" )
+          #set( $startYear = $mathtool.min($startYear, $eventYear) )
+          #foreach( $r in $presentation.getValue('reviewers').split(',') )
+            #if( not $reviewerCount.containsKey($r) )
+              #set( $discard = $reviewerList.add($r) )
+            #end
+            #set( $rcounts = $reviewerCount.getOrDefault($r, { }) )
+            #set( $discard = $rcounts.put($eventYear, $rcounts.getOrDefault($eventYear, 0) + 1) )
+            #set( $discard = $reviewerCount.put($r, $rcounts) )
+          #end
+        #end
+        #if( "$!presentation.getValue('workingGroup')" != "" )
+          #set( $wg = $presentation.getValue('workingGroup') )
+          #set( $wgcounts = $swgCount.getOrDefault($wg, { }) )
+          #set( $discard = $wgcounts.put($eventYear, $wgcounts.getOrDefault($eventYear, 0) + 1) )
+          #set( $discard = $swgCount.put($wg, $wgcounts) )
+        #end
+      #end
+    #end
+  #end
+
+  {{html}}
+    &lt;table class="table table-striped"&gt;
+      &lt;thead&gt;
+        &lt;tr&gt;
+          &lt;th&gt;Reviewer&lt;/th&gt;
+          #foreach($year in [$startYear..$currentYear])
+            &lt;th&gt;$year&lt;/th&gt;
+          #end
+        &lt;/tr&gt;
+      &lt;/thead&gt;
+      &lt;tbody&gt;
+        #foreach($r in $reviewerList)
+          &lt;tr&gt;
+            &lt;td&gt;#displayUser($r)&lt;/td&gt;
+            #foreach($year in [$startYear..$currentYear])
+              &lt;td&gt;$reviewerCount.getOrDefault($r, { }).getOrDefault($year,"")&lt;/td&gt;
+            #end
+          &lt;/tr&gt;
+        #end
+      &lt;/tbody&gt;
+      &lt;thead&gt;
+        &lt;tr&gt;
+          &lt;th&gt;Working group&lt;/th&gt;
+          #foreach($year in [$startYear..$currentYear])
+            &lt;th&gt;$year&lt;/th&gt;
+          #end
+        &lt;/tr&gt;
+      &lt;/thead&gt;
+      &lt;tbody&gt;
+        #foreach($wg in $swgCount.keySet())
+          &lt;tr&gt;
+            &lt;td&gt;$services.localization.render("Presentation.Code.PresentationClass_workingGroup_$wg")&lt;/td&gt;
+            #foreach($year in [$startYear..$currentYear])
+              &lt;td&gt;$swgCount.getOrDefault($wg, { }).getOrDefault($year,"")&lt;/td&gt;
+            #end
+          &lt;/tr&gt;
+        #end
+      &lt;/tbody&gt;
+    &lt;/table&gt;
+
+  {{/html}}
 {{/velocity}}</content>
 </xwikidoc>
