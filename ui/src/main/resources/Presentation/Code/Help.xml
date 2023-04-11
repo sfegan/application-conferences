@@ -1,0 +1,413 @@
+<?xml version="1.1" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc version="1.4" reference="Presentation.Code.Macros" locale="">
+  <web>Presentation.Code</web>
+  <name>Macros</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <creator>xwiki:XWiki.Admin</creator>
+  <parent>Presentation.Code.WebHome</parent>
+  <author>xwiki:XWiki.Admin</author>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <version>1.1</version>
+  <title>Macros</title>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>true</hidden>
+  <content>{{velocity}}
+#if ($doc.FullName == 'Presentation.Code.Macros')
+  #set ($messageKey = 'presentation.macros.description')
+  #set ($messageType = 'info')
+  {{$messageType}}
+  $services.localization.render($messageKey)
+  {{/$messageType}}
+  #stop
+#end
+#macro( renderEditableProperty $object $property $icon $userCanEdit $overrideLabel )
+  &lt;dt #if ($xcontext.action != 'edit' &amp;&amp; $userCanEdit)
+      class="editableProperty"
+      data-property="$escapetool.xml($services.model.serialize($object.getPropertyReference($property)))"
+      data-property-type="object"#end&gt;
+    &lt;label#if ($xcontext.action == 'edit') for="${object.xWikiClass.name}_0_$property"#end&gt;
+    #if ($overrideLabel)
+      $services.icon.render($icon) ${overrideLabel}
+    #else
+      $services.icon.render($icon) $escapetool.xml($doc.displayPrettyName($property, false, false))
+    #end
+    &lt;/label&gt;
+  &lt;/dt&gt;
+  #if($xcontext.action == 'edit' &amp;&amp; !$userCanEdit)
+    &lt;dd&gt;$doc.display($property, 'view')&lt;/dd&gt;
+  #else
+    &lt;dd&gt;$doc.display($property)&lt;/dd&gt;
+  #end
+#end
+#macro( getGroupMembersAsString $group )
+  #set( $users = $services.user.group.getMembers($group).toArray() )
+  #set( $userStringList = [] )
+  #foreach ( $userref in $users )
+    #set ( $discard = $userStringList.add($userref.toString()) )
+  #end
+  $stringtool.join($userStringList,",")##
+#end
+#macro( mailtoURL $userlist $subject $docurl )
+  #if ( $userlist and $userlist.class.name == "java.lang.String" )
+    #if( $userlist != "")
+      #set ( $userlist = $userlist.split(",") )
+    #else
+      #set ( $userlist = [] )
+    #end
+  #end
+  #if ( $userlist )
+    #set ( $email_addresses = {} )
+    #set ( $email_names = {} )
+    #set ( $missing_emails = {} )
+    #foreach ( $userref in $userlist )
+      #if ( $userref.class.name == "org.xwiki.model.reference.DocumentReference" )
+        #set ( $userref = $userref.toString() )
+      #end
+      #if( $userref and "$!userref" != "" and $services.user.exists($userref) )
+        #set ( $user = $services.user.getProperties($userref) )
+        #set ( $first_name = "${user.FirstName.substring(0,1).toUpperCase()}${user.FirstName.substring(1)}" )
+        #set ( $last_name = "${user.LastName.substring(0,1).toUpperCase()}${user.LastName.substring(1)}" )
+        #if ( $user.Email )
+          #set ( $discard = $email_addresses.put($user.Email, true) )
+          #set ( $discard = $email_names.put($first_name, true) )
+        #elseif ( $first_name != "" and $last_name != "" )
+          #set ( $discard = $missing_emails.put("$first_name $last_name ($userref)", true) )
+        #else
+          #set ( $discard = $missing_emails.put($userref, true) )
+        #end
+      #elseif( $userref and "$!userref" != "" )
+        #set ( $discard = $missing_emails.put($userref, true) )
+      #end
+    #end
+    #if ( !$email_addresses.isEmpty() )
+      #if( $email_names.size() &gt; 5 )
+        #set( $mailto_body = "Dear all,$util.newline$util.newline" )
+      #elseif( $email_names.size() &gt; 2 )
+        #set( $last_name = $email_names.size() - 1 )
+        #set( $email_names_keyset = [] )
+        #set( $discard = $email_names_keyset.addAll($email_names.keySet()) )
+        #set( $mailto_body = "Dear $stringtool.join($email_names_keyset,', ',0,$last_name) and $email_names_keyset.get($last_name),$util.newline$util.newline" )
+      #else
+        #set( $mailto_body = "Dear $stringtool.join($email_names.keySet(),' and '),$util.newline$util.newline" )
+      #end
+      #if ( $docurl )
+        #set( $mailto_body = "${mailto_body}URL: $docurl" )
+      #end
+      #if( !$missing_emails.isEmpty() )
+        #set( $missing_emails = $stringtool.join($missing_emails.keySet(), ', ') )
+        #set( $mailto_body = "${mailto_body}${util.newline}Missing emails: $missing_emails" )
+      #end
+      #set( $mailto_url = "mailto:$escapetool.url($stringtool.join($email_addresses.keySet(),','))" )
+      #set( $mailto_url = "$mailto_url?subject=$escapetool.url($subject)&amp;body=$escapetool.url($mailto_body)")
+      $mailto_url
+    #end
+  #end
+#end
+#macro( renderMailToButton $href $target )
+  &lt;a #if("$!href"!="")href="$href"#end #if("$!target"!="")target="$target"#end class="btn btn-primary" style="width:36px; line-height:17px; height:20px; padding:0; margin:0; margin-top:-4px; color=white;"&gt;$services.icon.renderHTML('envelope')&lt;/a&gt;
+#end
+#macro( mailtoAnchor $mailURL )
+  #if( "$!mailURL" != "" )
+    #renderMailToButton($mailURL, "_blank")
+  #end
+#end
+#macro( presentationTypeIcon $type )
+  #set( $renderIconName = { "invited": "comment", "talk": "comment", "poster": "file-white" } )
+  $services.icon.renderHTML(${renderIconName[$!type]|"question"})
+#end
+#macro( presentationStatusIcon $status )
+  #set( $renderIconName = { "draft": "pencil", "review": "zoom", "submitted": "move",
+    "accepted": "check", "refused": "cross", "withdrawn": "cut" } )
+  $services.icon.renderHTML(${renderIconName[$!status]|"question"})
+#end
+#macro( presentationApprovalIcon $status )
+  #set( $renderIconName = {"pending" : "shape_square", "approved" : "thumb_up", "rejected" : "thumb_down"} )
+  $services.icon.renderHTML(${renderIconName[$!status]|"question"})
+#end
+#macro( renderSlidesOrProceedingsLinkedIcon $presentation $presentationDoc $type )
+  #set( $value = $presentation.getValue($type) )
+  #if( "$!value" != "" )
+    #set ( $url = $presentationDoc.getAttachment($value) )
+    #if($type=="slides")
+      #set ( $icon = $services.icon.renderHTML('image') )
+    #else
+      #set ( $icon = $services.icon.renderHTML('book') )
+    #end
+    #if( $url )
+      &lt;a href="$url"&gt;$icon&lt;/a&gt;
+    #elseif( $urltool.toURL($value) )
+      &lt;a href="$value"&gt;$icon&lt;/a&gt;
+    #else
+      $icon
+    #end
+  #end
+#end
+#macro( renderAbstractLinkedIcon $presentation $presentationDoc $abstractModals )
+  #set( $value = $presentation.getValue('abstract').trim() )
+  #set( $icon = $services.icon.renderHTML('align-justify') )
+  #if( "$!value" != "" )
+    #if( $urltool.toURL($value) )
+      &lt;a href="$value"&gt;$icon&lt;/a&gt;
+    #else
+      #set( $abstractKey = "absModal$abstractModals.size()" )
+      #set( $abstractDOM = $services.rendering.parse($value, "xwiki/2.1") )
+      #set( $abstractHTML = $services.rendering.render($abstractDOM, "xhtml/1.0") )
+      #set( $discard = $abstractModals.put($abstractKey, { "title" : $presentationDoc.title, "abstract" : $abstractHTML}))
+      &lt;a href="#" data-toggle="modal" data-target="#$abstractKey"&gt;$icon&lt;/a&gt;
+    #end
+  #end
+#end
+#macro( renderAbstractModals $abstractModals )
+  #foreach($abstractKey in $abstractModals.keySet())
+    &lt;div class="modal fade" id="$abstractKey" tabindex="-1" role="dialog" aria-labelledby="${abstractKey}Label"&gt;
+      &lt;div class="modal-dialog" role="document"&gt;
+        &lt;div class="modal-content"&gt;
+          &lt;div class="modal-header"&gt;
+            &lt;button type="button" class="close" data-dismiss="modal" aria-label="Close"&gt;&lt;span aria-hidden="true"&gt;&amp;times;&lt;/span&gt;&lt;/button&gt;
+              &lt;h5&gt;$services.xml.escape($abstractModals[$abstractKey]["title"])&lt;/h5&gt;
+          &lt;/div&gt;
+          &lt;div class="modal-body"&gt;
+            $abstractModals[$abstractKey]["abstract"]
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+  #end
+#end
+#macro( renderApprovalsBy $whom )
+  #if( $whom == "swg" )
+    WG
+  #elseif( $whom == "sapo" )
+    SAPO
+  #elseif( $whom == "both" )
+    Both
+  #else
+    $services.icon.renderHTML('question')
+  #end
+#end
+#macro( approvalsDivStyle $approval )
+  #if( $approval == "approved" )
+    #set( $colorstyle = 'border-radius: 12px; background: palegreen; color: #333333;' )
+  #elseif ( $approval == "rejected" )
+    #set( $colorstyle = 'border-radius: 4px; background: lightcoral; color: #222222;' )
+  #else
+    #set( $colorstyle = '' )
+  #end
+  #set( $basestyle = 'width:24px; height:24px; padding:2px; margin:0; margin-left:-2px; margin-top:-2px; text-align: center;' )
+  #set( $style = "$basestyle $colorstyle" )
+  $style
+#end
+#macro( approvalStatus $presentation $approvalSet )
+  #if( $presentation.getValue('approvalBy') != "sapo" )
+    #set( $approval = ${presentation.getValue("${approvalSet}ApprovalSWG")|"pending"} )
+  #else
+    #set( $approval = "approved" )
+  #end
+  #if( $presentation.getValue('approvalBy') != "swg" )
+    #set( $approved_value = ${presentation.getValue("${approvalSet}ApprovalSAPO")|"pending"} )
+    #if( $approval == "approved" || ( $approval == "pending" &amp;&amp; $approved_value == "rejected" ) )
+      #set( $approval = $approved_value )
+    #end
+  #end
+  $approval##
+#end
+#macro( renderTwoColumnApprovals $presentation $approvalSet )
+  #set( $approvalIconName = {"pending" : "shape_square", "approved" : "thumb_up", "rejected" : "thumb_down"} )
+  #set( $swg_html = "" )
+  #if($presentation.getValue('approvalBy') != "sapo")
+    #set( $approved_value = ${presentation.getValue("${approvalSet}ApprovalSWG")|"pending"} )
+    #set( $approval = $approved_value )
+    #set( $swg_html = "#presentationApprovalIcon($approved_value)" )
+  #else
+    #set( $approval = "approved" )
+  #end
+  #set( $sapo_html = "" )
+  #if($presentation.getValue('approvalBy') != "swg")
+    #set( $approved_value = ${presentation.getValue("${approvalSet}ApprovalSAPO")|"pending"} )
+    #if($approval == "approved" || ( $approval == "pending" &amp;&amp; $approved_value == "rejected"))
+      #set($approval = $approved_value)
+    #end
+    #set( $sapo_html = "#presentationApprovalIcon($approved_value)" )
+  #end
+  #set( $style = "#approvalsDivStyle($approval)" )
+  &lt;td&gt;&lt;div style="$style"&gt;$swg_html&lt;/div&gt;&lt;/td&gt;
+  &lt;td&gt;&lt;div style="$style"&gt;$sapo_html&lt;/div&gt;&lt;/td&gt;
+#end
+#macro( renderPresentationKey )
+  &lt;h5&gt;Key&lt;/h5&gt;
+  &lt;div class="row"&gt;
+    &lt;div class="col-sm-3"&gt;
+      &lt;table&gt;
+        &lt;thead&gt;
+          &lt;tr&gt;&lt;th colspan=2&gt;Presentation type&lt;/th&gt;&lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+          &lt;tr&gt;&lt;td&gt;$services.icon.renderHTML('comment')&lt;/td&gt;&lt;td&gt;Invited or contributed talk&lt;/td&gt;&lt;/tr&gt;
+          &lt;tr&gt;&lt;td&gt;$services.icon.renderHTML('file-white')&lt;/td&gt;&lt;td&gt;Poster&lt;/td&gt;&lt;/tr&gt;
+        &lt;/tbody&gt;
+      &lt;/table&gt;
+    &lt;/div&gt;
+    &lt;div class="col-sm-3"&gt;
+      &lt;table&gt;
+        &lt;thead&gt;
+          &lt;tr&gt;&lt;th colspan=2&gt;Presentation status&lt;/th&gt;&lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+          &lt;tr&gt;&lt;td&gt;$services.icon.renderHTML('pencil')&lt;/td&gt;&lt;td&gt;Draft&lt;/td&gt;&lt;/tr&gt;
+## Obsoleted "review" status &lt;tr&gt;&lt;td&gt;$services.icon.renderHTML('zoom')&lt;/td&gt;&lt;td&gt;Review&lt;/td&gt;&lt;/tr&gt;
+          &lt;tr&gt;&lt;td&gt;$services.icon.renderHTML('move')&lt;/td&gt;&lt;td&gt;Submitted&lt;/td&gt;&lt;/tr&gt;
+          &lt;tr&gt;&lt;td&gt;$services.icon.renderHTML('tick')&lt;/td&gt;&lt;td&gt;Accepted&lt;/td&gt;&lt;/tr&gt;
+          &lt;tr&gt;&lt;td&gt;$services.icon.renderHTML('cross')&lt;/td&gt;&lt;td&gt;Refused&lt;/td&gt;&lt;/tr&gt;
+          &lt;tr&gt;&lt;td&gt;$services.icon.renderHTML('cut')&lt;/td&gt;&lt;td&gt;Withdrawn&lt;/td&gt;&lt;/tr&gt;
+        &lt;/tbody&gt;
+      &lt;/table&gt;
+    &lt;/div&gt;
+    &lt;div class="col-sm-3"&gt;
+      &lt;table&gt;
+        &lt;thead&gt;
+          &lt;tr&gt;&lt;th colspan=2&gt;Uploaded / Approvals&lt;/th&gt;&lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+          &lt;tr&gt;&lt;td&gt;$services.icon.renderHTML('align-justify')&lt;/td&gt;&lt;td&gt;Abstracts&lt;/td&gt;&lt;/tr&gt;
+          &lt;tr&gt;&lt;td&gt;$services.icon.renderHTML('image')&lt;/td&gt;&lt;td&gt;Slides (or posters)&lt;/td&gt;&lt;/tr&gt;
+          &lt;tr&gt;&lt;td&gt;$services.icon.renderHTML('book')&lt;/td&gt;&lt;td&gt;Proceedings&lt;/td&gt;&lt;/tr&gt;
+        &lt;/tbody&gt;
+      &lt;/table&gt;
+    &lt;/div&gt;
+    &lt;div class="col-sm-3"&gt;
+      &lt;table&gt;
+        &lt;thead&gt;
+          &lt;tr&gt;&lt;th colspan=5&gt;Approvals&lt;/th&gt;&lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+          #set( $pr = "padding-right: 1px" )
+          #set( $pl = "padding-left: 1px" )
+          #set( $pb = "$pl; $pr" )
+          #set( $status = "pending" )
+          &lt;tr&gt;
+            &lt;td style="$pr"&gt;&lt;div style="#approvalsDivStyle($status)"&gt;&lt;/div&gt;&lt;/td&gt;
+            &lt;td colspan=3 style="$pl"/&gt;
+            &lt;td&gt;Not required&lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td style="$pr"&gt;&lt;div style="#approvalsDivStyle($status)"&gt;$services.icon.renderHTML('shape_square')&lt;/div&gt;&lt;/td&gt;
+            &lt;td colspan=3 style="$pl"/&gt;
+            &lt;td&gt;Pending&lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td style="$pr"&gt;&lt;div style="#approvalsDivStyle($status)"&gt;$services.icon.renderHTML('thumb_up')&lt;/div&gt;&lt;/td&gt;
+            &lt;td colspan=3 style="$pl"/&gt;
+            &lt;td&gt;Partially approved&lt;/td&gt;
+          &lt;/tr&gt;
+          #set( $status = "approved" )
+          &lt;tr&gt;
+            &lt;td style="$pr"&gt;&lt;div style="#approvalsDivStyle($status)"&gt;$services.icon.renderHTML('thumb_up')&lt;/div&gt;&lt;/td&gt;
+            &lt;td style="$pb"&gt;&lt;div style="#approvalsDivStyle($status)"&gt;&lt;/div&gt;&lt;/td&gt;
+            &lt;td colspan=2 style="$pl"/&gt;
+            &lt;/td&gt;
+            &lt;td&gt;Fully approved&lt;/td&gt;
+          &lt;/tr&gt;
+          #set( $status = "rejected" )
+          &lt;tr&gt;
+            &lt;td style="$pr"&gt;&lt;div style="#approvalsDivStyle($status)"&gt;$services.icon.renderHTML('thumb_down')&lt;/div&gt;&lt;/td&gt;
+            &lt;td style="$pb"&gt;&lt;div style="#approvalsDivStyle($status)"&gt;$services.icon.renderHTML('thumb_up')&lt;/div&gt;&lt;/td&gt;
+            &lt;td style="$pb"&gt;&lt;div style="#approvalsDivStyle($status)"&gt;$services.icon.renderHTML('shape_square')&lt;/div&gt;&lt;/td&gt;
+            &lt;td style="$pl"&gt;&lt;div style="#approvalsDivStyle($status)"&gt;&lt;/div&gt;&lt;/td&gt;
+            &lt;td&gt;Rejected&lt;/td&gt;
+          &lt;/tr&gt;
+        &lt;/tbody&gt;
+      &lt;/table&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+#end
+#macro( renderConferenceYearSelectorForm $title $selectedYear $lastYear $firstYear )
+  #if( !$firstYear )
+    #set( $firstYear = 2008 )
+  #end
+  #if( !$lastYear )
+    #set($lastYear = $xwiki.getDocument($services.query.xwql("FROM doc.object(Event.Code.EventClass) AS evt ORDER BY evt.startDate desc").setLimit(1).execute()).getObject("Event.Code.EventClass").getValue('startDate').year + 1900)
+  #end
+  #if( !$lastYear )
+    #set( $lastYear = $datetool.year )
+  #end
+  &lt;form action="$doc.getURL("view")" method="get"&gt;
+    &lt;div class="xform"&gt;
+      &lt;div class="row"&gt;
+        &lt;div class="col-md-12"&gt;
+          &lt;dl&gt;
+            &lt;dt&gt;$title&lt;/dt&gt;
+            &lt;dd&gt;
+              &lt;select name="year" id="year-select" onchange="this.form.submit()"&gt;
+                &lt;option value=""&gt;--- All upcoming conferences ---&lt;/option&gt;
+                #foreach( $year in [$lastYear..$firstYear] )
+                  #set( $selected = "" )
+                  #if ( "$year" == "$selectedYear" )
+                    #set( $selected = 'selected' )
+                  #end
+                  &lt;option value="$year" $selected&gt;$year&lt;/option&gt;
+                #end
+              &lt;/select&gt;
+            &lt;/dd&gt;
+          &lt;/dl&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/form&gt;
+#end
+#macro( displayUserOrBlank $user )
+  #if("$!user" != "")#displayUser($user, { "useInlineHTML": true} )#end
+#end
+#macro( renderCreateConferenceBox )
+  &lt;div style="background-color: powderblue; border: 2px solid navy; padding: 10px; margin-bottom: 10px"&gt;
+    &lt;h5 style="margin-top: 2px"&gt;$escapetool.xml($services.localization.render('event.createEvent.section_title'))&lt;/h5&gt;
+    &lt;form action="$xwiki.getDocument('Main.WebHome').getURL('create')" class="xform" method="post"&gt;
+      #set($discard = $xwiki.jsfx.use('js/xwiki/create.js', {'forceSkinAction': true}))
+      #set($escapedSpaceReference = $escapetool.xml($doc.Space))
+      &lt;input type="hidden" name="spaceReference" value="Event" /&gt;
+      &lt;input type="hidden" name="template" value="Event.Code.EventTemplate" /&gt;
+      ## We use the event field to transfer the name of the event on which this new presentation should be linked to
+      &lt;div&gt;
+        &lt;dl&gt;
+          &lt;dt&gt;
+            &lt;label for="targetTitle"&gt;$escapetool.xml($services.localization.render('event.createEvent.title'))&lt;/label&gt;
+            &lt;span class="xHint"&gt;$escapetool.xml($services.localization.render('event.createEvent.title.hint'))&lt;/span&gt;
+          &lt;/dt&gt;
+          &lt;dd&gt;
+            &lt;input type="text" id="targetTitle" name="name" value="" placeholder="$escapetool.xml($services.localization.render('event.createEvent.title.placeholder')) $datetool.year" /&gt;
+          &lt;/dd&gt;
+        &lt;/dl&gt;
+        &lt;span class="buttonwrapper"&gt;
+          &lt;input class="button" type="submit" value="$escapetool.xml($services.localization.render('event.createEvent.create'))"/&gt;
+        &lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/form&gt;
+  &lt;/div&gt;
+#end
+{{/velocity}}</content>
+</xwikidoc>
