@@ -46,20 +46,56 @@
 ## See link below for inspiration
 ## https://snippets.xwiki.org/xwiki/bin/view/Extension/User%20Property%20Custom%20Display
 #set ($propertyClass = $object.getxWikiClass().get($name))
+
 #if ($type == 'edit')
   {{html clean=false}}
     $doc.displayEdit($propertyClass, $prefix, $object)
+    #set( $word_split = $value.trim().split('\W+') )
+    #set( $word_count = 0 )
+    #foreach ( $w in $word_split )
+      #if ( "$w" != "" )
+        #set( $word_count = $word_count + 1 )
+      #end
+    #end
+    #set( $char_count = $value.trim().length() )
+    &lt;p&gt;&lt;i id="abstractWordCount"&gt;$escapetool.xml($services.localization.render('presentation.sheet.words')): $numbertool.number($word_count), $escapetool.xml($services.localization.render('presentation.sheet.chars')): $numbertool.number($char_count).&lt;/i&gt;&lt;/p&gt;
+    &lt;script&gt;
+      self.document.getElementById("Presentation.Code.PresentationClass_0_abstract").
+          addEventListener("input", function() {
+        var inputText = document.getElementById("Presentation.Code.PresentationClass_0_abstract").value.trim();
+        var wordSplit = inputText.split(/\W+/)
+        var wordCount = 0;
+        for (var i = 0; i &lt; wordSplit.length; i++) {
+          if (wordSplit[i] != "") {
+            wordCount++;
+          }
+        }
+        var charCount = inputText.length;
+        var formattedWordCount = wordCount.toLocaleString();
+        var formattedCharCount = charCount.toLocaleString();
+        document.getElementById("abstractWordCount").innerHTML =
+          "$escapetool.xml($services.localization.render('presentation.sheet.words')): " +
+          formattedWordCount +
+          ", $escapetool.xml($services.localization.render('presentation.sheet.chars')): " +
+          formattedCharCount;
+      });
+    &lt;/script&gt;
   {{/html}}
 #else
   {{html clean=false}}
     $doc.displayView($propertyClass, $prefix, $object)
-    #if($!value.trim() != "")
-      #set( $word_count = $value.trim().split('\W+').size() )
+    #if("$!value.trim()" != "")
+      #set( $word_split = $value.trim().split('\W+') )
+      #set( $word_count = 0 )
+      #foreach ( $w in $word_split )
+        #if ( "$w" != "" )
+          #set( $word_count = $word_count + 1 )
+        #end
+      #end
       #set( $char_count = $value.trim().length() )
-      &lt;p&gt;&lt;i&gt;$escapetool.xml($services.localization.render('presentation.sheet.words')): $word_count, $escapetool.xml($services.localization.render('presentation.sheet.chars')): $char_count&lt;/i&gt;&lt;/p&gt;
+      &lt;p&gt;&lt;i&gt;$escapetool.xml($services.localization.render('presentation.sheet.words')): $numbertool.number($word_count), $escapetool.xml($services.localization.render('presentation.sheet.chars')): $numbertool.number($char_count).&lt;/i&gt;&lt;/p&gt;
     #end
   {{/html}}
 #end
-{{/velocity}}
-</content>
+{{/velocity}}</content>
 </xwikidoc>
