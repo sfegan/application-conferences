@@ -270,7 +270,7 @@
       <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
     </procApprovalSWG>
     <proceedings>
-      <customDisplay/>
+      <customDisplay>{{include reference="Presentation.Code.SlidesDisplayer"/}}</customDisplay>
       <disabled>0</disabled>
       <hint/>
       <name>proceedings</name>
@@ -299,7 +299,7 @@
     </proceedingsArxiv>
     <proceedingsDOI>
       <customDisplay/>
-      <disabled>0</disabled>
+      <disabled>1</disabled>
       <hint/>
       <name>proceedingsDOI</name>
       <number>20</number>
