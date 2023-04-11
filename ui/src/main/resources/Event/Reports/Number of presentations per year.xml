@@ -38,12 +38,16 @@
   <hidden>false</hidden>
   <content>{{velocity}}
   #set( $num_pres_per_year = {} )
+  #set( $num_conf_per_year = {} )
   #foreach( $eventdocref in $services.query.xwql("FROM doc.object(Event.Code.EventClass) AS evt").execute() )
     #if ( $eventdocref != 'Event.Code.EventTemplate' )
       #set( $eventdoc = $xwiki.getDocument($eventdocref) )
       #set( $event = $eventdoc.getObject("Event.Code.EventClass") )
       #set( $npres = $services.query.xwql('FROM doc.object(Presentation.Code.PresentationClass) as presentation WHERE presentation.event = :event').bindValue('event',$eventdocref).count() )
       #set( $eventYear = $event.getValue('startDate').year + 1900 )
+      #if( $npres&gt;0 )
+        #set( $discard = $num_conf_per_year.put($eventYear,  $num_conf_per_year.getOrDefault($eventYear, 0) + 1) )
+      #end
       #set( $npres = $num_pres_per_year.getOrDefault($eventYear, 0) + $npres )
       #set( $discard = $num_pres_per_year.put($eventYear,  $npres) )
     #end
@@ -53,14 +57,22 @@
       &lt;thead&gt;
         &lt;tr style="border: none"&gt;
           &lt;th&gt;Year&lt;/th&gt;
+          &lt;th&gt;Number of conferences&lt;/th&gt;
           &lt;th&gt;Number of presentations&lt;/th&gt;
+          &lt;th/&gt;
         &lt;/tr&gt;
       &lt;/thead&gt;
       &lt;tbody&gt;
       #foreach ( $year in $collectiontool.sort($num_pres_per_year.keySet()) )
         &lt;tr&gt;
           &lt;td&gt;$year&lt;/td&gt;
-          &lt;td&gt;$num_pres_per_year.getOrDefault($year, 0)#if($year==2022)&amp;nbsp;&amp;nbsp;&lt;b&gt;(warning: dataset for 2022 incomplete)&lt;/b&gt;#end&lt;/td&gt;
+          &lt;td&gt;$num_conf_per_year.getOrDefault($year, 0)&lt;/td&gt;
+          &lt;td&gt;$num_pres_per_year.getOrDefault($year, 0)&lt;/td&gt;
+          #if($year==2022)
+            &lt;td&gt;&lt;b&gt;(warning: dataset for 2022 incomplete)&lt;/b&gt;&lt;/td&gt;
+          #else
+            &lt;td/&gt;
+          #end
         &lt;/tr&gt;
       #end
       &lt;/tbody&gt;
