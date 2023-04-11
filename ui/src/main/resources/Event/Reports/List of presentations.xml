@@ -22,7 +22,7 @@
 
 <xwikidoc version="1.4" reference="Event.Reports.WebHome" locale="">
   <web>Event.Reports</web>
-  <name>WebHome</name>
+  <name>List of presentations</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
@@ -31,18 +31,235 @@
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
-  <title>Reports</title>
+  <title>List of presentations</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>false</hidden>
-  <content>{{velocity}}
-{{html wiki="true"}}
-  &lt;ul&gt;
-    &lt;li&gt;[[Number of presentations per year]]&lt;/li&gt;
-    &lt;li&gt;[[My presentations]]&lt;/li&gt;
-    &lt;li&gt;&lt;a href="$xwiki.getDocument('Event.Reports.My presentations').getURL()?role=reviewer"&gt;My reviews&lt;/a&gt;&lt;/li&gt;
-  &lt;/ul&gt;
-{{/html}}
+  <content>{{include reference="Presentation.Code.Macros"/}}
+
+{{velocity}}
+  #set ($discard = $xwiki.jsx.use($doc.fullName) )
+
+  {{html}}
+
+    #set( $selectedYear = $xcontext.getRequest().getParameter('year') )
+    #set( $selectedEvent = $xcontext.getRequest().getParameter('event') )
+
+    #if( "$!selectedEvent" == "" )
+      #set( $nextYear = $datetool.year + 1 )
+      #renderConferenceYearSelectorForm("Presentations for year", $selectedYear)
+    #else
+      #set( $eventDoc = $xwiki.getDocument($selectedEvent) )
+      &lt;dl>
+        &lt;dt&gt;Presentations for conference&lt;/dt&gt;
+        &lt;dd&gt;$escapetool.xml(${eventDoc.title|"Conference not found: $selectedEvent"})&lt;/dd&gt;
+      &lt;/dl&gt;
+    #end
+
+    #set( $eventDocRefList = [] )
+    #if( "$!selectedEvent" != "" )
+      #set( $eventDocRefList = [ $selectedEvent ] )
+    #elseif( "$!selectedYear" != "" )
+      #set( $query = "FROM doc.object(Event.Code.EventClass) AS evt WHERE evt.startDate&gt;=:sdate AND evt.startDate&lt;=:edate ORDER BY evt.startDate DESC" )
+      #set( $sdate = $datetool.toDate('yyyy-MM-dd',"${selectedYear}-01-01") )
+      #set( $eyear = $numbertool.toNumber($selectedYear) + 1 )
+      #set( $edate = $datetool.toDate('yyyy-MM-dd',"${eyear}-01-01") )
+      #set( $eventDocRefList = $services.query.xwql($query).bindValue('sdate',$sdate).bindValue('edate',$edate).execute() )
+    #else
+      #set( $query = "FROM doc.object(Event.Code.EventClass) AS evt WHERE evt.startDate&gt;=:sdate OR evt.endDate&gt;=:sdate OR evt.proceedingsDeadline&gt;=:sdate ORDER BY evt.startDate DESC" )
+      #set( $sdate = $datetool.date )
+      #set( $eventDocRefList = $services.query.xwql($query).bindValue('sdate',$sdate).execute() )
+    #end
+
+    #set( $presentationEventDocList = [] )
+    #set( $query = 'FROM doc.object(Presentation.Code.PresentationClass) as presentation WHERE presentation.event = :event' )
+    #foreach( $eventDocRef in $eventDocRefList )
+      #set( $eventDoc = $xwiki.getDocument($eventDocRef) )
+      ## Case-insensitive sort, see : https://blog.teknkl.com/case-sensitivity-quirks-with-velocity-sorts/
+      #set( $eventPresentationList = [] )
+      #foreach( $presentationDocRef in $services.query.xwql($query).bindValue('event',$eventDoc.fullName).execute() )
+        #set( $presentationDoc = $xwiki.getDocument($presentationDocRef) )
+        #set( $discard = $eventPresentationList.add({ "title": $presentationDoc.title, "presentationDoc": $presentationDoc, "eventDoc": $eventDoc }) )
+      #end
+      #set( $discard = $presentationEventDocList.addAll($collectiontool.sort($eventPresentationList, "title")) )
+    #end
+
+    #if( $presentationEventDocList.isEmpty() )
+      &lt;p&gt;No presentations found.&lt;/p&gt;
+    #else
+      #set( $abstractModals = {} )
+      &lt;table class="table table-striped"&gt;
+        &lt;thead&gt;
+          &lt;tr style="border: none"&gt;
+            &lt;th rowspan=2 colspan=3&gt;Presentation&lt;/th&gt;
+            &lt;th colspan=2 rowspan=2&gt;Authors&lt;/th&gt;
+            &lt;th colspan=2 rowspan=2&gt;Reviewers&lt;/th&gt;
+            &lt;th colspan=3 style="border: none"&gt;Uploaded&lt;/th&gt;
+            &lt;th colspan=7 style="border: none"&gt;Approvals&lt;/th&gt;
+          &lt;/tr&gt;
+            &lt;tr style="border: none"&gt;
+            &lt;th style="border-top: none"&gt;$services.icon.renderHTML('align-justify')&lt;/th&gt;
+            &lt;th style="border-top: none"&gt;$services.icon.renderHTML('image')&lt;/th&gt;
+            &lt;th style="border-top: none"&gt;$services.icon.renderHTML('book')&lt;/th&gt;
+            &lt;th style="border-top: none"&gt;By&lt;/th&gt;
+            &lt;th colspan=2 style="border-top: none"&gt;$services.icon.renderHTML('align-justify')&lt;/th&gt;
+            &lt;th colspan=2 style="border-top: none"&gt;$services.icon.renderHTML('image')&lt;/th&gt;
+            &lt;th colspan=2 style="border-top: none"&gt;$services.icon.renderHTML('book')&lt;/th&gt;
+          &lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+        &lt;/tbody&gt;
+          #foreach( $presentationEventDoc in $presentationEventDocList )
+            &lt;tr&gt;
+              #set ( $presentationDoc = $presentationEventDoc["presentationDoc"] )
+              #set ( $eventDoc = $presentationEventDoc["eventDoc"] )
+              #set( $presentation = $presentationDoc.getObject("Presentation.Code.PresentationClass") )
+              #if($presentation.getValue('status') == "withdrawn" or $presentation.getValue('status') == "refused")
+                &lt;td&gt;&lt;a href="$presentationDoc.URL"&gt;&lt;s&gt;$services.xml.escape($presentationDoc.title)&lt;/s&gt;&lt;/a&gt;&lt;/td&gt;
+              #else
+                &lt;td&gt;&lt;a href="$presentationDoc.URL"&gt;$services.xml.escape($presentationDoc.title)&lt;/a&gt;&lt;/td&gt;
+              #end
+              #if( "$!selectedEvent" == "" )
+                &lt;td&gt;&lt;a href="#" data-toggle="tooltip" data-delay=50 title="$escapetool.xml($eventDoc.title)" data-placement="top"&gt;
+                  #presentationTypeIcon($presentation.getValue('type'))
+                &lt;/a&gt;&lt;/td&gt;
+              #else
+                &lt;td&gt;#presentationTypeIcon($presentation.getValue('type'))&lt;/td&gt;
+              #end
+              &lt;td&gt;#presentationStatusIcon($presentation.getValue('status'))&lt;/td&gt;
+              #set( $mailSubject = "Presentation - $presentationDoc.title" )
+              #set( $mailURL = "#mailtoURL($presentation.getValue('presenters'), $mailSubject, $presentationDoc.externalURL)" )
+              &lt;td&gt;#mailtoAnchor($mailURL)&lt;/td&gt;
+              &lt;td&gt;#displayUserOrBlank($presentation.getValue('presenters'))&lt;/td&gt;
+              #set( $mailSubject = "Presentation - $presentationDoc.title" )
+              #set( $mailURL = "#mailtoURL($presentation.getValue('reviewers'), $mailSubject, $presentationDoc.externalURL)" )
+              &lt;td&gt;#mailtoAnchor($mailURL)&lt;/td&gt;
+              &lt;td&gt;#displayUserOrBlank($presentation.getValue('reviewers'))&lt;/td&gt;
+              &lt;td&gt;#renderAbstractLinkedIcon($presentation, $presentationDoc, $abstractModals)&lt;/td&gt;
+              &lt;td&gt;#renderSlidesOrProceedingsLinkedIcon($presentation, $presentationDoc, 'slides')&lt;/td&gt;
+              &lt;td&gt;#renderSlidesOrProceedingsLinkedIcon($presentation, $presentationDoc, 'proceedings')&lt;/td&gt;
+              &lt;td&gt;#renderApprovalsBy($presentation.getValue('approvalBy'))&lt;/td&gt;
+              #renderTwoColumnApprovals($presentation "abs")
+              #renderTwoColumnApprovals($presentation "talk")
+              #if( $!presentation.getValue('hasProceedings')==1 or "$presentation.getValue('proceedings')" != "")
+                #renderTwoColumnApprovals($presentation "proc")
+              #else
+                &lt;td/&gt;
+                &lt;td/&gt;
+              #end
+            &lt;/tr&gt;
+          #end
+      &lt;/table&gt;
+
+    #renderAbstractModals($abstractModals)
+
+    #renderPresentationKey
+
+    #end
+  {{/html}}
 {{/velocity}}</content>
+  <object>
+    <name>Event.Reports.List of presentations</name>
+    <number>0</number>
+    <className>XWiki.JavaScriptExtension</className>
+    <guid>2483e9ef-e8bc-4699-b8d6-f5f9407f5ac3</guid>
+    <class>
+      <name>XWiki.JavaScriptExtension</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <cache>
+        <cache>0</cache>
+        <defaultValue>long</defaultValue>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>cache</name>
+        <number>5</number>
+        <prettyName>Caching policy</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>long|short|default|forbid</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </cache>
+      <code>
+        <contenttype>PureText</contenttype>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <rows>20</rows>
+        <size>50</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <parse>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>parse</name>
+        <number>4</number>
+        <prettyName>Parse content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </parse>
+      <use>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>use</name>
+        <number>3</number>
+        <prettyName>Use this extension</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>currentPage|onDemand|always</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </use>
+    </class>
+    <property>
+      <cache>long</cache>
+    </property>
+    <property>
+      <code>require(['jquery', 'bootstrap'], function($) {
+  // Activate all tooltips
+  $('[data-toggle="tooltip"]').tooltip();
+});
+</code>
+    </property>
+    <property>
+      <name>Enable tooltips</name>
+    </property>
+    <property>
+      <parse>0</parse>
+    </property>
+    <property>
+      <use>onDemand</use>
+    </property>
+  </object>
 </xwikidoc>
