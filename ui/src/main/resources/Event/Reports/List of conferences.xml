@@ -22,7 +22,7 @@
 
 <xwikidoc version="1.4" reference="Event.Reports.WebHome" locale="">
   <web>Event.Reports</web>
-  <name>WebHome</name>
+  <name>List of conferences</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
@@ -31,18 +31,234 @@
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
-  <title>Reports</title>
+  <title>List of conferences</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>false</hidden>
-  <content>{{velocity}}
-{{html wiki="true"}}
-  &lt;ul&gt;
-    &lt;li&gt;[[Number of presentations per year]]&lt;/li&gt;
-    &lt;li&gt;[[My presentations]]&lt;/li&gt;
-    &lt;li&gt;&lt;a href="$xwiki.getDocument('Event.Reports.My presentations').getURL()?role=reviewer"&gt;My reviews&lt;/a&gt;&lt;/li&gt;
-  &lt;/ul&gt;
-{{/html}}
+  <content>{{include reference="Presentation.Code.Macros"/}}
+
+{{velocity}}
+  #macro ( renderDeadline $deadline )
+    #set( $dl_text = $datetool.format('yyyy-MM-dd',$deadline) )
+    #set( $style = "")
+    #set( $whenis = $datetool.whenIs($datetool.systemCalendar,$deadline).seconds )
+    #if( $whenis &lt;= 0 )
+      #set( $colorstyle = 'background: lightgray; color: #333333' )
+    #elseif( $whenis &lt; 14*86400 )
+      #set( $colorstyle = 'background: lightcoral; color: #222222' )
+    #elseif( $whenis &lt; 21*86400 )
+      #set( $colorstyle = 'background: orange; color: #333333' )
+    #elseif( $whenis &lt;= 28*86400 )
+      #set( $colorstyle = 'background: palegreen; color: #333333' )  ## gold
+    #else
+      #set( $colorstyle = '' )
+    #end
+    &lt;span style="padding: 2px 4px 2px 4px; $colorstyle"&gt;${dl_text|"&lt;i&gt;missing&lt;/i&gt;"}&lt;/span&gt;
+  #end
+
+  {{html}}
+    #set( $selectedYear = $xcontext.getRequest().getParameter('year') )
+
+    #set( $nextYear = $datetool.year + 1 )
+    #renderConferenceYearSelectorForm("Conferences for year", $selectedYear)
+
+    #if( "$!selectedYear" == "" )
+      #renderCreateConferenceBox
+    #end
+
+    #set( $presentation_summary_url = $xwiki.getURL('Event.Reports.List of presentations','view') )
+
+    #if( "$!selectedYear" != "" )
+      #set( $query = "FROM doc.object(Event.Code.EventClass) AS evt WHERE evt.startDate&gt;=:sdate AND evt.startDate&lt;=:edate ORDER BY evt.startDate DESC" )
+      #set( $sdate = $datetool.toDate('yyyy-MM-dd',"${selectedYear}-01-01") )
+      #set( $eyear = $numbertool.toNumber($selectedYear) + 1 )
+      #set( $edate = $datetool.toDate('yyyy-MM-dd',"${eyear}-01-01") )
+      #set( $eventDocRefList = $services.query.xwql($query).bindValue('sdate',$sdate).bindValue('edate',$edate).execute() )
+    #else
+      #set( $query = "FROM doc.object(Event.Code.EventClass) AS evt WHERE evt.startDate&gt;=:sdate OR evt.endDate&gt;=:sdate OR evt.proceedingsDeadline&gt;=:sdate ORDER BY evt.startDate DESC" )
+      #set( $sdate = $datetool.date )
+      #set( $eventDocRefList = $services.query.xwql($query).bindValue('sdate',$sdate).execute() )
+    #end
+
+    #if( $eventDocRefList.isEmpty() )
+      &lt;p&gt;No conferences found&lt;/p&gt;
+    #else
+      &lt;table class="table table-striped"&gt;
+        &lt;thead&gt;
+          &lt;tr&gt;
+            &lt;th rowspan=2 colspan=2 style="width: 30%"&gt;Conference&lt;/th&gt;
+            &lt;th colspan=3 style="border: none"&gt;Deadlines&lt;/th&gt;
+            &lt;th colspan=4 style="border: none"&gt;Presentations&lt;/th&gt;
+            &lt;th colspan=3 style="border: none"&gt;Uploaded&lt;/th&gt;
+            &lt;th colspan=5 style="border: none"&gt;Approvals&lt;/th&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;th style="border-top: none"&gt;$services.icon.renderHTML('align-justify') Abs &lt;/th&gt;
+            &lt;th style="border-top: none"&gt;$services.icon.renderHTML('image') Slides&lt;/th&gt;
+            &lt;th style="border-top: none"&gt;$services.icon.renderHTML('book') Proc&lt;/th&gt;
+            &lt;th style="border-top: none"&gt;$services.icon.renderHTML('pencil')&lt;/th&gt;
+            &lt;th style="border-top: none"&gt;#&lt;/th&gt;
+            &lt;th style="border-top: none"&gt;$services.icon.renderHTML('comment')&lt;/th&gt;
+            &lt;th style="border-top: none"&gt;$services.icon.renderHTML('file-white')&lt;/th&gt;
+            &lt;th style="border-top: none"&gt;$services.icon.renderHTML('align-justify')&lt;/th&gt;
+            &lt;th style="border-top: none"&gt;$services.icon.renderHTML('image')&lt;/th&gt;
+            &lt;th style="border-top: none"&gt;$services.icon.renderHTML('book')&lt;/th&gt;
+            &lt;th style="border-top: none"&gt;By&lt;/th&gt;
+            &lt;th style="border-top: none"&gt;$services.icon.renderHTML('zoom')&lt;/th&gt;
+            &lt;th style="border-top: none"&gt;$services.icon.renderHTML('align-justify')&lt;/th&gt;
+            &lt;th style="border-top: none"&gt;$services.icon.renderHTML('image')&lt;/th&gt;
+            &lt;th style="border-top: none"&gt;$services.icon.renderHTML('book')&lt;/th&gt;
+          &lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+        #set( $query = 'FROM doc.object(Presentation.Code.PresentationClass) as presentation WHERE presentation.event = :event' )
+        #foreach( $eventDocRef in $eventDocRefList )
+          #if( $eventDocRef != 'Event.Code.EventTemplate' )
+            #set( $eventDoc = $xwiki.getDocument($eventDocRef) )
+            #set( $event = $eventDoc.getObject("Event.Code.EventClass") )
+            #set( $abs_deadline = $datetool.format('yyyy-MM-dd',$event.getValue('abstractDeadline')) )
+            #set( $start_date = $datetool.format('yyyy-MM-dd',$event.getValue('startDate')) )
+            #set( $proc_deadline = $datetool.format('yyyy-MM-dd',$event.getValue('proceedingsDeadline')) )
+            #set( $num_contribution = 0 )
+            #set( $num_talk = 0 )
+            #set( $num_poster = 0 )
+            #set( $num_abstracts = 0 )
+            #set( $num_slides = 0 )
+            #set( $num_proceedings = 0 )
+            #set( $num_approved_abstracts = 0 )
+            #set( $num_approved_slides = 0 )
+            #set( $num_approved_proceedings = 0 )
+            #set( $authors = "" )
+            #set( $reviewers = "" )
+            #foreach( $presentationDocRef in $services.query.xwql($query).bindValue('event',$eventDoc.fullName).execute() )
+              #set( $presentationDoc = $xwiki.getDocument($presentationDocRef) )
+              #set( $presentation = $presentationDoc.getObject("Presentation.Code.PresentationClass"))
+              #set( $num_contribution = $num_contribution+1 )
+              #if( $presentation.getValue('type') == "invited" || $presentation.getValue('type') == "talk" )
+                #set( $num_talk = $num_talk+1 )
+              #elseif( $presentation.getValue('type') == "poster" )
+                #set( $num_poster = $num_poster+1 )
+              #end
+              #if( $presentation.getValue('abstract').trim().length()&gt;0 )
+                #set( $num_abstracts = $num_abstracts+1 )
+              #end
+              #if($presentation.getValue('slides') != "")
+                #set( $num_slides = $num_slides+1 )
+              #end
+              #if($presentation.getValue('proceedings') != "")
+                #set( $num_proceedings = $num_proceedings+1 )
+              #end
+              #if( "#approvalStatus($presentation,'abs')" == "approved" )
+                #set( $num_approved_abstracts = $num_approved_abstracts + 1 )
+              #end
+              #if( "#approvalStatus($presentation,'talk')" == "approved" )
+                #set( $num_approved_slides = $num_approved_slides + 1 )
+              #end
+              #if( "#approvalStatus($presentation,'proc')" == "approved" )
+                #set( $num_approved_proceedings = $num_approved_proceedings + 1 )
+              #end
+              #if ( "$!presentation.getValue('presenters')" != "" )
+                #if( $authors != "")
+                  #set( $authors = "$authors,$presentation.getValue('presenters')" )
+                #else
+                  #set( $authors = $presentation.getValue('presenters') )
+                #end
+              #end
+              #if ( "$!presentation.getValue('reviewers')" != "" )
+                #if( $reviewers != "")
+                  #set( $reviewers = "$reviewers,$presentation.getValue('reviewers')" )
+                #else
+                  #set( $reviewers = $presentation.getValue('reviewers') )
+                #end
+              #end
+            #end
+            &lt;tr&gt;
+              &lt;td&gt;&lt;a href="$eventDoc.URL"&gt;$services.xml.escape($eventDoc.title)&lt;/a&gt;&lt;/td&gt;
+              #if($event.getValue('conferenceURL') &amp;&amp; $urltool.toURL($event.getValue('conferenceURL')))
+                &lt;td&gt;&lt;a href="$event.getValue('conferenceURL')"&gt;$services.icon.renderHTML('link')&lt;/a&gt;&lt;/td&gt;
+              #else
+                &lt;td/&gt;
+              #end
+              &lt;td&gt;#renderDeadline($event.getValue('abstractDeadline'))&lt;/td&gt;
+              &lt;td&gt;#renderDeadline($event.getValue('startDate'))&lt;/td&gt;
+              #if($event.getValue('hasProceedings')==1)
+                &lt;td&gt;#renderDeadline($event.getValue('proceedingsDeadline'))&lt;/td&gt;
+              #else
+                &lt;td/&gt;
+              #end
+              #set( $mailSubject = "Presentations at $eventDoc.title" )
+              #set( $mailTo = "#mailtoURL($authors, $mailSubject, $eventDoc.externalURL)" )
+              &lt;td&gt;#mailtoAnchor($mailTo)&lt;/td&gt;
+              &lt;td&gt;&lt;a href="$presentation_summary_url?event=$escapetool.url($eventDoc.fullName)"&gt;$num_contribution&lt;/a&gt;&lt;/td&gt;
+              &lt;td&gt;$num_talk&lt;/td&gt;
+              &lt;td&gt;$num_poster&lt;/td&gt;
+              &lt;td&gt;$num_abstracts&lt;/td&gt;
+              &lt;td&gt;$num_slides&lt;/td&gt;
+              &lt;td&gt;$num_proceedings&lt;/td&gt;
+              &lt;td&gt;#renderApprovalsBy($event.getValue("approvalBy"))&lt;/td&gt;
+              #set( $mailTo = "#mailtoURL($reviewers, $mailSubject, $eventDoc.externalURL)" )
+              &lt;td&gt;#mailtoAnchor($mailTo)&lt;/td&gt;
+              &lt;td&gt;$num_approved_abstracts&lt;/td&gt;
+              &lt;td&gt;$num_approved_slides&lt;/td&gt;
+              &lt;td&gt;$num_approved_proceedings&lt;/td&gt;
+            &lt;/tr&gt;
+          #end
+        #end
+        &lt;/tbody&gt;
+      &lt;/table&gt;
+
+      &lt;h5&gt;Key&lt;/h5&gt;
+      &lt;div class="row"&gt;
+        &lt;div class="col-sm-4"&gt;
+          &lt;table&gt;
+            &lt;thead&gt;
+              &lt;tr&gt;&lt;th colspan=2&gt;Presentations&lt;/th&gt;&lt;/tr&gt;
+            &lt;/thead&gt;
+            &lt;tbody&gt;
+              &lt;tr&gt;&lt;td&gt;$services.icon.renderHTML('pencil')&lt;/td&gt;&lt;td&gt;Push #renderMailToButton("", "") to email to all authors&lt;/td&gt;&lt;/tr&gt;
+              &lt;tr&gt;&lt;td&gt;#&lt;/td&gt;&lt;td&gt;All presentations&lt;/td&gt;&lt;/tr&gt;
+              &lt;tr&gt;&lt;td&gt;$services.icon.renderHTML('comment')&lt;/td&gt;&lt;td&gt;Invited or contributed talks&lt;/td&gt;&lt;/tr&gt;
+              &lt;tr&gt;&lt;td&gt;$services.icon.renderHTML('file-white')&lt;/td&gt;&lt;td&gt;Posters&lt;/td&gt;&lt;/tr&gt;
+            &lt;/tbody&gt;
+          &lt;/table&gt;
+        &lt;/div&gt;
+        &lt;div class="col-sm-4"&gt;
+          &lt;table&gt;
+            &lt;thead&gt;
+              &lt;tr&gt;&lt;th colspan=2&gt;Uploaded / Approvals&lt;/th&gt;&lt;/tr&gt;
+            &lt;/thead&gt;
+            &lt;tbody&gt;
+              &lt;tr&gt;&lt;td&gt;$services.icon.renderHTML('zoom')&lt;/td&gt;&lt;td&gt;Push #renderMailToButton("", "") to email to all reviewers&lt;/td&gt;&lt;/tr&gt;
+              &lt;tr&gt;&lt;td&gt;$services.icon.renderHTML('align-justify')&lt;/td&gt;&lt;td&gt;Abstracts&lt;/td&gt;&lt;/tr&gt;
+              &lt;tr&gt;&lt;td&gt;$services.icon.renderHTML('image')&lt;/td&gt;&lt;td&gt;Slides (or posters)&lt;/td&gt;&lt;/tr&gt;
+              &lt;tr&gt;&lt;td&gt;$services.icon.renderHTML('book')&lt;/td&gt;&lt;td&gt;Proceedings&lt;/td&gt;&lt;/tr&gt;
+            &lt;/tbody&gt;
+          &lt;/table&gt;
+        &lt;/div&gt;
+        &lt;div class="col-sm-4"&gt;
+          &lt;table&gt;
+            &lt;thead&gt;
+              &lt;tr&gt;&lt;th colspan=2&gt;Deadlines passed&lt;/th&gt;&lt;/tr&gt;
+            &lt;/thead&gt;
+            &lt;tbody&gt;
+              #set($cal = $datetool.systemCalendar)
+              $cal.set(11, 0)
+              $cal.set(12, 0)
+              $cal.set(13, 0)
+              $cal.set(14, 0)
+              &lt;tr&gt;#renderDeadline($cal)&lt;td&gt;Conference&lt;/td&gt;&lt;/tr&gt;
+              $cal.add(7,14)
+              &lt;tr&gt;#renderDeadline($cal)&lt;td&gt;SAPO (2 weeks)&lt;/td&gt;&lt;/tr&gt;
+              $cal.add(7,7)
+              &lt;tr&gt;#renderDeadline($cal)&lt;td&gt;WG (3 weeks)&lt;/td&gt;&lt;/tr&gt;
+              $cal.add(7,7)
+              &lt;tr&gt;#renderDeadline($cal)&lt;td&gt;4-week reminder&lt;/td&gt;&lt;/tr&gt;
+            &lt;/tbody&gt;
+          &lt;/table&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    #end
+  {{/html}}
 {{/velocity}}</content>
 </xwikidoc>
