@@ -39,7 +39,10 @@
   <content>{{velocity}}
 {{html wiki="true"}}
   &lt;ul&gt;
-    &lt;li&gt;[[Number of presentations per year]]&lt;/li&gt;
+    &lt;li&gt;[[List of conferences : upcoming, or for a calendar year&gt;&gt;List of conferences]]&lt;/li&gt;
+    &lt;li&gt;[[List of presentations : upcoming, or for a given calendar year&gt;&gt;List of presentations]]&lt;/li&gt;
+    &lt;li&gt;[[Number of conferences and presentations per year&gt;&gt;Number of presentations per year]]&lt;/li&gt;
+    &lt;li&gt;[[Reviewer and working-group statistics]]&lt;/li&gt;
     &lt;li&gt;[[My presentations]]&lt;/li&gt;
     &lt;li&gt;&lt;a href="$xwiki.getDocument('Event.Reports.My presentations').getURL()?role=reviewer"&gt;My reviews&lt;/a&gt;&lt;/li&gt;
   &lt;/ul&gt;
