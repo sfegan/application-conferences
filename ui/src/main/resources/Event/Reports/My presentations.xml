@@ -150,15 +150,15 @@
               &lt;td/&gt;
             #end
             #if($role=="presenter" and "$!presentation.getValue('reviewers')"!='')
-              &lt;td&gt;#displayUser($presentation.getValue('reviewers'), { "useInlineHTML": true} )&lt;/td&gt;
               #set( $mailSubject = "Presentation - $presentationDoc.title" )
               #set( $mailURL = "#mailtoURL($presentation.getValue('reviewers'), $mailSubject, $presentationDoc.externalURL)" )
               &lt;td&gt;#mailtoAnchor($mailURL)&lt;/td&gt;
+              &lt;td&gt;#displayUserOrBlank($presentation.getValue('reviewers'))&lt;/td&gt;
             #elseif($role!="presenter" and "$!presentation.getValue('presenters')"!='')
-              &lt;td&gt;#displayUser($presentation.getValue('presenters'), { "useInlineHTML": true} )&lt;/td&gt;
               #set( $mailSubject = "Presentation - $presentationDoc.title" )
               #set( $mailURL = "#mailtoURL($presentation.getValue('presenters'), $mailSubject, $presentationDoc.externalURL)" )
               &lt;td&gt;#mailtoAnchor($mailURL)&lt;/td&gt;
+              &lt;td&gt;#displayUserOrBlank($presentation.getValue('presenters'))&lt;/td&gt;
             #else
               &lt;td/&gt;
               &lt;td/&gt;
@@ -167,10 +167,10 @@
             &lt;td&gt;#renderSlidesOrProceedingsLinkedIcon($presentation, $presentationDoc, 'slides')&lt;/td&gt;
             &lt;td&gt;#renderSlidesOrProceedingsLinkedIcon($presentation, $presentationDoc, 'proceedings')&lt;/td&gt;
             &lt;td&gt;#renderApprovalsBy($presentation.getValue('approvalBy'))&lt;/td&gt;
-            #renderTwoColumnApprovals($presentation "absApproval")
-            #renderTwoColumnApprovals($presentation "talkApproval")
+            #renderTwoColumnApprovals($presentation "abs")
+            #renderTwoColumnApprovals($presentation "talk")
             #if( $!presentation.getValue('hasProceedings')==1 or "$presentation.getValue('proceedings')" != "")
-              #renderTwoColumnApprovals($presentation "procApproval")
+              #renderTwoColumnApprovals($presentation "proc")
             #else
               &lt;td/&gt;
               &lt;td/&gt;
