@@ -146,15 +146,27 @@ $event.display('bannerMessage','view')
     #if (!$eventDoc.isNew() &amp;&amp; $doc.isNew() &amp;&amp; $editing)
       $object.set('approvalBy', $event.getValue('approvalBy'))
       $object.set('hasProceedings', $event.getValue('hasProceedings'))
+      $object.set('presenters', $xcontext.user)
+      #set( $defaultReviewerGroup = "XWiki.defaultReviewerGroup" )
+      $object.set('reviewers', "#getGroupMembersAsString($defaultReviewerGroup)")
     #end
   #end
 #end
 &lt;div class="xform"&gt;
   &lt;div class="row"&gt;
     &lt;div class="col-md-8"&gt;
-      &lt;dl&gt;
-        #renderEditableProperty($object, 'title', 'font', $hasEdit, false)
-      &lt;/dl&gt;
+      &lt;div class="row"&gt;
+        &lt;div class="col-sm-11"&gt;
+          &lt;dl&gt;
+            #renderEditableProperty($object, 'title', 'font', $hasEdit, false)
+          &lt;/dl&gt;
+        &lt;/div&gt;
+        &lt;div class="col-sm-1"&gt;
+          &lt;a href="#" data-toggle="modal" data-target="#helpModal" style="font-size:36px"&gt;
+            $services.icon.renderHTML("question")
+          &lt;/a&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
       &lt;div class="row"&gt;
         &lt;div class="col-sm-6"&gt;
           &lt;dl&gt;
@@ -175,19 +187,19 @@ $event.display('bannerMessage','view')
         &lt;/div&gt;
         &lt;div class="col-sm-6"&gt;
           &lt;dl&gt;
-            #renderEditableProperty($object, 'hasProceedings', 'book', $hasEdit, false)
+            #renderEditableProperty($object, 'workingGroup', 'group', $hasEdit, false)
           &lt;/dl&gt;
         &lt;/div&gt;
       &lt;/div&gt;
       &lt;div class="row"&gt;
         &lt;div class="col-sm-6"&gt;
           &lt;dl&gt;
-            #renderEditableProperty($object, 'proceedingsArxiv', 'world', $hasEdit, false)
+            #renderEditableProperty($object, 'hasProceedings', 'book', $hasEdit, false)
           &lt;/dl&gt;
         &lt;/div&gt;
         &lt;div class="col-sm-6"&gt;
           &lt;dl&gt;
-           #renderEditableProperty($object, 'proceedingsDOI', 'world', $hasEdit, false)
+            #renderEditableProperty($object, 'proceedingsArxiv', 'world', $hasEdit, false)
           &lt;/dl&gt;
         &lt;/div&gt;
       &lt;/div&gt;
@@ -210,7 +222,6 @@ $event.display('bannerMessage','view')
       &lt;h5&gt;$escapetool.xml($services.localization.render("presentation.sheet.sapo_header"))&lt;/h5&gt;
       &lt;dl style="margin-bottom: 2px"&gt;
         #renderEditableProperty($object, 'reviewers', 'search', $hasEdit, false)
-        #renderEditableProperty($object, 'workingGroup', 'group', $hasEdit, false)
         #set($parentDocument = $xwiki.getDocument($request.get('parent')))
         #if (!$parentDocument.isNew() &amp;&amp; $parentDocument.getObject('Event.Code.EventClass') &amp;&amp; $doc.isNew() &amp;&amp; $editing)
           ## Set-up the document to use the event passed in parent.
@@ -229,6 +240,34 @@ $event.display('bannerMessage','view')
     &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;
+
+&lt;div class="modal fade in" id="helpModal" tabindex="-1" role="dialog" aria-labelledby="helpModalLabel"&gt;
+  &lt;div class="modal-dialog modal-lg" role="document"&gt;
+    &lt;div class="modal-content"&gt;
+      &lt;div class="modal-header"&gt;
+        &lt;button type="button" class="close" data-dismiss="modal" aria-label="Close"&gt;
+          &lt;span aria-hidden="true"&gt;&amp;times;&lt;/span&gt;
+        &lt;/button&gt;
+        &lt;h5&gt;Advice for authors and reviewers&lt;/h5&gt;
+      &lt;/div&gt;
+      &lt;div class="modal-body"&gt;
+        {{include reference="Presentation.Code.Help"/}}
+
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+#if (!$eventDoc.isNew() &amp;&amp; $doc.isNew() &amp;&amp; $editing)
+  &lt;script&gt;
+    require(['jquery',"$services.webjars.url('jquery-ui', 'jquery-ui.js')"], function($) {
+      $(window).on('load', function() {
+        $('#helpModal').modal('show');
+      });
+    });
+  &lt;/script&gt;
+#end
+
 {{/html}}
 {{/velocity}}</content>
 </xwikidoc>
